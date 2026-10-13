@@ -1,3 +1,7 @@
+# Note for Lecturer:
+- Semua tugas yang kami kerjakan/permintaan screenshot setiap tahapan dan tampilan dapat diakses di: docs/nama_tugas/README.md
+- Tugas 4: docs/tugas4/README.md
+
 # MyPeken — Marketplace UMKM Lokal Wilayah Sarbagita (Bali)
 
 **MyPeken** adalah platform *marketplace* berbasis lokasi (*Location-Based Service*) yang dirancang untuk mewadahi dan mendigitalisasi pelaku UMKM lokal di Provinsi Bali, khususnya kawasan **Sarbagita (Denpasar, Badung, Gianyar, dan Tabanan)**. Platform ini mengintegrasikan pembukaan toko berstandar KYC dengan validasi koordinat GPS, transaksi aman berbasis rekening bersama (*Escrow*), kalkulasi logistik otomatis, pencairan dana *real-time* (*Disbursement*), serta asisten pelanggan pintar berbasis AI.
