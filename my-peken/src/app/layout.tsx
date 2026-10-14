@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Inter, Montserrat } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const montserratHeading = Montserrat({subsets:['latin'],variable:'--font-heading'});
 
-const inter = Inter({subsets:['latin'],variable:'--font-sans'});
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const montserrat = Montserrat({
+  variable: '--font-montserrat',
   subsets: ["latin"],
 });
 
@@ -24,11 +24,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", inter.variable, montserratHeading.variable)}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en">
+      <body className={cn("h-full", "antialiased", montserrat.variable, inter.variable, "font-sans", inter.variable, montserratHeading.variable)}>
+          <div className="mx-auto p-4 sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
+            <Navbar />
+              {children}
+            <Footer />
+          </div>
+        </body>
     </html>
   );
 }
