@@ -1,0 +1,2 @@
+# Alasan Memilih Tailwind CSS untuk Proyek MyPeken
+Memilih Tailwind CSS untuk proyek MyPeken karena karakteristik aplikasi e-commerce lokal ini membutuhkan fleksibilitas desain dan konsistensi identitas branding.
