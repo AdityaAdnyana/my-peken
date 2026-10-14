@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+
 interface headerSellerProps{
     title? : string ;
 }
@@ -7,15 +9,15 @@ interface headerSellerProps{
 function Logo() {
     return(
         <div className="flex flex-warp">
-            <link  href="/" className="text-[#2E6F40] text-xl">MyPeken</link>
-            <link  href="/" className="text-[#4A4A4A] text-base">Seller</link>
+            <Link href="/" className="text-mypeken-brand text-3xl font-bold">MyPeken</Link>
+            <Link href="/" className="text-mypeken-black text-xl font-bold">Seller</Link>
         </div>
     );
 }
 
 export default function headerSeller({title = "MyPeken Seller"} :headerSellerProps){
     return (
-    <header className="bg-[#F2F0EF] flex flex-row "> 
+    <header className="bg-mypeken-white flex flex-row "> 
         <Logo/>
     </header>)
 }
