@@ -185,3 +185,20 @@
     font-family: var(--font-inter);
   }
 }
+
+@layer utilities{
+  :root {
+    --font-monserrat: 'Montserrat', sans-serif;
+    --font-inter: 'Inter', sans-serif;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5{
+    font-family: var(--font-monserrat);
+  }
+  body{
+    font-family: var(--font-inter);
+  }
+}
