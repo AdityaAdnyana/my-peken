@@ -34,7 +34,7 @@ const Footer = () => {
                 <Link href="/">Afiliasi</Link>
             </div>
         </div>
-    ) 
+    )
 }
 
 export default Footer
