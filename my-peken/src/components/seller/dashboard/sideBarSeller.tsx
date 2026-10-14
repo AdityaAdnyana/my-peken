@@ -10,6 +10,11 @@ interface opsionProps{
     iconName? : string 
 }
 
+interface profileProps{
+    userNameP : string
+    fotoSRCP ?: string
+}
+
 export default function sideBarSeller({userName,saldoUser,fotoSRC = "tempat foto default"}: sideBarProps){
     return(
         <aside className="bg-[#F2F0EF] flex flex-column shadow-xl">
@@ -17,4 +22,8 @@ export default function sideBarSeller({userName,saldoUser,fotoSRC = "tempat foto
         </aside>
     )
 }
+
+function profile({userNameP,fotoSRCP = "tempat foto default"} : profileProps) {
+    
+} 
 
