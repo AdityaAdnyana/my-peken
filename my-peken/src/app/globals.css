@@ -163,5 +163,8 @@
     --chart-2: hsl(173 58% 39%);
     --chart-1: hsl(12 76% 61%);
     --radius: 0.5rem;
+
+    /* layout & card value*/
+    --border-mypeken-rounded: var(--border-rounded-xl);
   }
 }
