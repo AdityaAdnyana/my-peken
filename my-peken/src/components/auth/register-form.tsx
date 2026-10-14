@@ -2,19 +2,20 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { GoogleButton } from "./google-button";
 
 export function RegisterForm() {
-
+  const router = useRouter();
   const [identifier, setIdentifier] = useState("");
 
   const isFilled = identifier.trim().length > 0;
 
-  // logic nyusul
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFilled) return;
 
+    router.push("/login");
   };
 
   return (

@@ -2,7 +2,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
-@theme {
+@theme{
   /* Custom colors start */
   --color-mypeken-white : #F2F0EF;
   --color-mypeken-black : #4A4A4A;
@@ -13,8 +13,8 @@
   --color-mypeken-gray : #6B7280;
   /* Custom colors end */
 
-    --font-sans: var(--font-sans);
-    --font-heading: var(--font-heading);
+    --font-sans: var(--font-inter);
+    --font-heading: var(--font-monserrat);
     
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
@@ -166,5 +166,22 @@
 
     /* layout & card value*/
     --border-mypeken-rounded: var(--border-rounded-xl);
+  }
+}
+
+@layer utilities{
+  :root {
+    --font-monserrat: 'Montserrat', sans-serif;
+    --font-inter: 'Inter', sans-serif;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5{
+    font-family: var(--font-monserrat);
+  }
+  body{
+    font-family: var(--font-inter);
   }
 }

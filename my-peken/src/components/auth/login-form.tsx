@@ -2,20 +2,21 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { GoogleButton } from "./google-button";
 
 export function LoginForm() {
-
+  const router = useRouter();
   const [identifier, setIdentifier] = useState("");
 
   const isFilled = identifier.trim().length > 0;
-
-  // ini  logic menyusul
+  //logic menyusul
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFilled) return;
 
-    // TODO
+    // ke halaman pendaftaran seller KYC
+    router.push("/seller/kyc");
   };
 
   return (
@@ -76,7 +77,7 @@ export function LoginForm() {
         <div className="flex-1 h-px bg-mypeken-light-gray" />
       </div>
 
-      <GoogleButton text="Google" />
+      <GoogleButton text="Google" onClick={() => router.push("/seller/kyc")} />
     </div>
   );
 }
