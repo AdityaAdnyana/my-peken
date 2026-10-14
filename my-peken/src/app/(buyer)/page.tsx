@@ -1,5 +1,7 @@
 import { redirect } from "next/navigation";
 
 export default function Home() {
-  redirect("/register");
+  return (
+    <div className="">Homepage</div>
+  );
 }
