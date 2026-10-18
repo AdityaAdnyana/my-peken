@@ -4,6 +4,7 @@
 
 @theme{
   /* Custom colors start */
+  
   --color-mypeken-white : #F2F0EF;
   --color-mypeken-black : #4A4A4A;
   --color-mypeken-brand : #2E6F40;
@@ -11,6 +12,7 @@
   --color-mypeken-highligh : #E35336;
   --color-mypeken-light-gray : #D9D9D9;
   --color-mypeken-gray : #6B7280;
+  --color-off-white : #FAFAFA;
   /* Custom colors end */
 
     --font-sans: var(--font-inter);

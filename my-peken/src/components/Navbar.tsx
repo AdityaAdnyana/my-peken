@@ -1,6 +1,7 @@
 import Link from "next/link"
 import SearchBar from "./SearchBar"
 import { Bell, Home, ShoppingCart } from "lucide-react"
+import { Button } from "./ui/button"
 
 const Navbar = () => {
     return (
@@ -15,9 +16,14 @@ const Navbar = () => {
                 <Link href={"/"}>
                     <Home className="w-4 h-4 text-gray-600"/>
                 </Link>
-                <Bell className="w-4 h-4 text-gray-600"/>
-                <ShoppingCart className="w-4 h-4 text-gray-600"/>
-                <Link href={"/login"}>Sign In</Link>
+                <Link href={"/"}>
+                    <Bell className="w-4 h-4 text-gray-600"/>
+                </Link>
+                <Link href={"/"}>
+                    <ShoppingCart className="w-4 h-4 text-gray-600"/>
+                </Link>
+                <Button variant={"secondary"}><Link href={"./login"}>Masuk</Link></Button>
+                <Button variant={"default"}><Link href={"./register"}>Daftar</Link></Button>
             </div>
         </nav>
     )
