@@ -26,7 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body className={cn("bg-background text-foreground h-full", "antialiased", montserrat.variable, inter.variable, "font-sans", inter.variable, montserratHeading.variable)}>
-          <div className="mx-auto p-4 sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
+          <div className="mx-auto p-4 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
             <Navbar />
               {children}
             <Footer />
