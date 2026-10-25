@@ -4,6 +4,7 @@ import { useState } from "react"
 import Categories from "./Categories"
 import ProductCard from "./ProductCard"
 import { ProductType } from "./types"
+import Link from "next/link"
 
 //TEMPORARY 
 const products: ProductType[] = [
@@ -49,20 +50,21 @@ const products: ProductType[] = [
     },
 ];
 
-const ProductList = () => {
-    const [category, setCategory] = useState("all")
-    const filteredProducts = category === "all" ? products : products.filter(product => product.category === category)
+const ProductList = ({category}:{category:string}) => {
+    // const [category, setCategory] = useState("all")
+    // const filteredProducts = category === "all" ? products : products.filter(product => product.category === category)
 
     return(
         <div className="">
-            <Categories selected={category} onSelect={setCategory}/>
+            <Categories />
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-12">
-                {filteredProducts.map(product=>(
+                {products.map(product=>(
                     <ProductCard key={product.id} product={product} />
                 ))}
             </div>
+            <Link href={category ? `/products/?category=${category}` : "/products"} className="flex justify-end mt-4 underline text-sm text-mypeken-light-gray">Lihat Semua Produk</Link>
         </div>
-    )
-}
+    );
+};
 
 export default ProductList
