@@ -1,6 +1,6 @@
 import Link from "next/link"
 import SearchBar from "./SearchBar"
-import { Bell, Home, ShoppingCart } from "lucide-react"
+import { Bell, Home, ShoppingCart, Store } from "lucide-react"
 import { Button } from "./ui/button"
 
 const Navbar = () => {
@@ -14,13 +14,16 @@ const Navbar = () => {
             <div className="flex items-center gap-6">
                 <SearchBar/>
                 <Link href={"/"}>
-                    <Home className="w-4 h-4 text-gray-600"/>
+                    <Home className="w-4 h-4 text-mypeken-gray"/>
                 </Link>
                 <Link href={"/"}>
-                    <Bell className="w-4 h-4 text-gray-600"/>
+                    <Bell className="w-4 h-4 text-mypeken-gray"/>
                 </Link>
                 <Link href={"/"}>
-                    <ShoppingCart className="w-4 h-4 text-gray-600"/>
+                    <ShoppingCart className="w-4 h-4 text-mypeken-gray"/>
+                </Link>
+                <Link href={"/"}>
+                    <Store className="w-4 h-4 text-mypeken-gray"/>
                 </Link>
                 <Button variant={"secondary"}><Link href={"./login"}>Masuk</Link></Button>
                 <Button variant={"default"}><Link href={"./register"}>Daftar</Link></Button>
