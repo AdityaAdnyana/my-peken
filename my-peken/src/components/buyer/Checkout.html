@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body>
+        <div class="max-w-6xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-900 p-3">Checkout</h1>
+
+        <!-- Container Utama: Grid 3 Kolom -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+
+            <!-- KOLOM KIRI: Alamat, Card Produk & Kurir -->
+            <div class="lg:col-span-2 flex flex-col gap-4">
+
+                <!-- Alamat -->
+                <div class="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex justify-between items-start">
+                    <div>
+                        <p class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Alamat Pengiriman</p>
+                        <p class="text-sm font-bold text-gray-800 flex items-center gap-1">
+                            Kost • Chandra
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1 leading-relaxed max-w-xl">
+                            Jalan Wonokromo Tengah V no. 14
+                        </p>
+                    </div>
+                    <button class="text-xs font-bold text-gray-600 border border-gray-300 px-3 py-1.5 rounded-lg hover:bg-gray-50 cursor-pointer flex-shrink-0">
+                        Ganti
+                    </button>
+                </div>
+
+                <!-- Card Produk -->
+                <div class="flex flex-col gap-3">
+                    <!-- Card 1 -->
+                    <div class="flex flex-row items-center bg-white border border-gray-100 shadow-sm rounded-xl p-3 gap-3">
+                        <img 
+                            class="w-20 h-20 object-cover rounded-lg flex-shrink-0"
+                            src="  " 
+                            alt="Gambar Produk 1"
+                        />
+                        <div class="flex flex-col justify-between flex-grow min-w-0 py-1">
+                            <div class="flex flex-row justify-between items-start gap-2">
+                                <h3 class="font-bold text-gray-800">Produk 1</h3>
+                                <p class="text-gray-900 font-bold text-sm flex-shrink-0">Rp 100.000</p>
+                            </div>
+                            <div class="flex flex-row justify-between items-center mt-3">
+                                <p class="text-xs text-gray-500">Kopi</p>
+                                <p class="text-xs text-gray-500 bg-gray-100 px-2 py-1 ">Jumlah : 1</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="flex flex-row items-center bg-white border border-gray-100 shadow-sm rounded-xl p-3 gap-3">
+                        <img 
+                            class="w-20 h-20 object-cover rounded-lg flex-shrink-0"
+                            src="  " 
+                            alt="Gambar Produk 1"
+                        />
+                        <div class="flex flex-col justify-between flex-grow min-w-0 py-1">
+                            <div class="flex flex-row justify-between items-start gap-2">
+                                <h3 class="font-bold text-gray-800">Produk 2</h3>
+                                <p class="text-gray-900 font-bold text-sm flex-shrink-0">Rp 100.000</p>
+                            </div>
+                            <div class="flex flex-row justify-between items-center mt-3">
+                                <p class="text-xs text-gray-500">Kopi</p>
+                                <p class="text-xs text-gray-500 bg-gray-100 px-2 py-1 ">Jumlah : 1</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="flex flex-row items-center bg-white border border-gray-100 shadow-sm rounded-xl p-3 gap-3">
+                        <img 
+                            class="w-20 h-20 object-cover rounded-lg flex-shrink-0"
+                            src="  " 
+                            alt="Gambar Produk 1"
+                        />
+                        <div class="flex flex-col justify-between flex-grow min-w-0 py-1">
+                            <div class="flex flex-row justify-between items-start gap-2">
+                                <h3 class="font-bold text-gray-800">Produk 3</h3>
+                                <p class="text-gray-900 font-bold text-sm flex-shrink-0">Rp 100.000</p>
+                            </div>
+                            <div class="flex flex-row justify-between items-center mt-3">
+                                <p class="text-xs text-gray-500">Kopi</p>
+                                <p class="text-xs text-gray-500 bg-gray-100 px-2 py-1 ">Jumlah : 1</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pilih Kurir -->
+                <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 flex items-center justify-between gap-4">
+                    <label for="kurir" class="text-sm font-bold text-gray-800 flex-shrink-0">Pilih Kurir Pengiriman:</label>
+                    <select id="kurir" name="kurir" class="w-full max-w-xs bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg p-2.5 focus:ring-emerald-500 focus:border-emerald-500 cursor-pointer">
+                        <option value="jne">JNE</option>
+                        <option value="gojek">GO-JEK</option>
+                        <option value="shopee">Shopee Express</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <!-- KOLOM KANAN: Card Pembayaran -->
+            <div class="bg-white border border-gray-100 shadow-sm rounded-xl p-5 sticky top-6 flex flex-col gap-4">
+                
+                <!-- Metode Pembayaran -->
+                <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+                    <h2 class="text-sm font-bold text-gray-800">Metode Pembayaran</h2>
+                </div>
+
+                <!--  Opsi Pembayaran -->
+                <div class="flex flex-col gap-3 text-xs">
+                    <label class="flex justify-between items-center cursor-pointer">
+                        <span class="flex items-center gap-2 font-bold">
+                            BCA Virtual Account
+                        </span>
+                        <input type="radio" name="payment" checked class="accent-emerald-600 w-4 h-4 cursor-pointer" />
+                    </label>
+                    <label class="flex justify-between items-center cursor-pointer">
+                        <span class="flex items-center gap-2 font-bold">
+                            BRI Virtual Account
+                        </span>
+                        <input type="radio" name="payment" class="accent-emerald-600 w-4 h-4 cursor-pointer" />
+                    </label>
+                    <label class="flex justify-between items-center cursor-pointer">
+                        <span class="flex items-center gap-2 font-bold">
+                            Alfamart
+                        </span>
+                        <input type="radio" name="payment" class="accent-emerald-600 w-4 h-4 cursor-pointer" />
+                    </label>
+                </div>
+
+                <!-- Total Transaksi -->
+                <div class="pt-3 border-t border-gray-100 flex flex-col gap-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-800">Total Tagihan</span>
+                        <span class="text-base font-bold text-gray-900">Rp 300.000</span>
+                    </div>
+                    <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl shadow-sm transition text-sm cursor-pointer">
+                        Bayar Sekarang
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>

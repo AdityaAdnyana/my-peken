@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keranjang</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+</head>
+
+<body>
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-2xl font-bold text-gray-900 p-3">Keranjang</h1>
+
+        <!-- Container Utama: Grid 2 Kolom -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+            
+            <!-- Kolom Kiri: Card Produk -->
+            <div class="lg:col-span-2 flex flex-col gap-4">
+                
+                <!-- Card 1 -->
+                <div class="flex flex-row items-center bg-white border border-gray-100 shadow-sm rounded-xl p-3 gap-3">
+                    <img 
+                        class="w-20 h-20 object-cover rounded-lg flex-shrink-0"
+                        src=" " 
+                        alt="Gambar Produk 1"
+                    />
+                    <div class="flex flex-col justify-between flex-grow min-w-0 py-1">
+                        <!-- Nama dan Harga -->
+                        <div class="flex flex-row justify-between items-start gap-2">
+                            <h3 class="font-bold">Produk 1</h3>
+                            <p class="text-gray-900 font-bold text-sm flex-shrink-0">Rp 100.000</p>
+                        </div>
+                        <!-- Kategori dan Jumlah -->
+                        <div class="flex flex-row justify-between items-center mt-3">
+                            <p class="text-xs text-gray-500">Kopi</p>
+                            <p class="text-xs text-gray-500 font-medium bg-gray-100 px-2.5 py-1 rounded-md">Jumlah: 1</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2 -->
+                <div class="flex flex-row items-center bg-white border border-gray-100 shadow-sm rounded-xl p-3 gap-3">
+                    <img 
+                        class="w-20 h-20 object-cover rounded-lg flex-shrink-0"
+                        src=" " 
+                        alt="Gambar Produk 2"
+                    />
+                    <div class="flex flex-col justify-between flex-grow min-w-0 py-1">
+                        <!-- Nama dan Harga -->
+                        <div class="flex flex-row justify-between items-start gap-2">
+                            <h3 class="font-bold">Produk 2</h3>
+                            <p class="text-gray-900 font-bold text-sm flex-shrink-0">Rp 100.000</p>
+                        </div>
+                        <!-- Kategori dan Jumlah -->
+                        <div class="flex flex-row justify-between items-center mt-3">
+                            <p class="text-xs text-gray-500">Kopi</p>
+                            <p class="text-xs text-gray-500 font-medium bg-gray-100 px-2.5 py-1 rounded-md">Jumlah: 1</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div class="flex flex-row items-center bg-white border border-gray-100 shadow-sm rounded-xl p-3 gap-3">
+                    <img 
+                        class="w-20 h-20 object-cover rounded-lg flex-shrink-0"
+                        src=" " 
+                        alt="Gambar Produk 3"
+                    />
+                    <div class="flex flex-col justify-between flex-grow min-w-0 py-1">
+                        <!-- Nama dan Harga -->
+                        <div class="flex flex-row justify-between items-start gap-2">
+                            <h3 class="font-bold">Produk 3</h3>
+                            <p class="text-gray-900 font-bold text-sm flex-shrink-0">Rp 100.000</p>
+                        </div>
+                        <!-- Kategori dan Jumlah -->
+                        <div class="flex flex-row justify-between items-center mt-3">
+                            <p class="text-xs text-gray-500">Kopi</p>
+                            <p class="text-xs text-gray-500 font-medium bg-gray-100 px-2.5 py-1 rounded-md">Jumlah: 1</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kolom Kanan: Card Total Belanja -->
+            <div class="bg-white border border-gray-100 shadow-sm rounded-xl p-5 sticky top-6 flex flex-col gap-4">
+                <h2 class="font-bold text-base text-gray-800 pb-2 border-b border-gray-100">
+                    Ringkasan Belanja
+                </h2>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-600">Total</span>
+                    <span class="font-bold text-gray-900 text-base">Rp 300.000</span>
+                </div>
+                <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg ">
+                    Checkout
+                </button>
+            </div>
+
+        </div>
+    </div>
+</body>
+
+</html>
