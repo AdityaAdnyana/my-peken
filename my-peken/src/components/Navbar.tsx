@@ -22,7 +22,7 @@ const Navbar = () => {
                 <Link href={"/"}>
                     <ShoppingCart className="w-4 h-4 text-mypeken-gray"/>
                 </Link>
-                <Link href={"/"}>
+                <Link href={"./Mydashboard"}>
                     <Store className="w-4 h-4 text-mypeken-gray"/>
                 </Link>
                 <Button variant={"secondary"}><Link href={"./login"}>Masuk</Link></Button>
