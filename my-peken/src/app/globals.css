@@ -168,6 +168,16 @@
 
     /* layout & card value*/
     --border-mypeken-rounded: var(--border-rounded-xl);
+
+    /* Sidebar colors */
+--sidebar: var(--color-mypeken-white);             /* background sidebar */
+--sidebar-foreground: var(--color-mypeken-black);  /* teks */
+--sidebar-primary: var(--color-mypeken-brand);     /* elemen primary */
+--sidebar-primary-foreground: var(--color-mypeken-white);
+--sidebar-accent: var(--color-mypeken-light-gray); /* hover/active bg */
+--sidebar-accent-foreground: var(--color-mypeken-black);
+--sidebar-border: var(--color-mypeken-gray);       /* border */
+--sidebar-ring: var(--color-mypeken-brand);        /* focus ring */
   }
 }
 
