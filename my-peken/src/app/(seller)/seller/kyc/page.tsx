@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { SellerSidebar } from "@/components/seller/seller-sidebar";
 import { KycRegistrationForm } from "@/components/seller/kyc-registration-form";
 
 export const metadata: Metadata = {
@@ -9,9 +8,8 @@ export const metadata: Metadata = {
 
 export default function SellerKycPage() {
   return (
-    <main className="grid grid-cols-1 gap-6 py-6 md:grid-cols-[220px_1fr]">
-      <SellerSidebar />
+    <div className="w-full">
       <KycRegistrationForm />
-    </main>
+    </div>
   );
 }
