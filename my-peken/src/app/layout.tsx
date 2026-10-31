@@ -26,10 +26,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en">
       <body className={cn("bg-background text-foreground h-full", "antialiased", montserrat.variable, inter.variable, "font-sans", inter.variable, montserratHeading.variable)}>
-          <div className="mx-auto p-4 sm:px-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
-            <Navbar />
-              {children}
-            <Footer />
+          <img 
+            src="doodle-art/my-peken-doodle-art.png" 
+            alt="Background" 
+            className="fixed inset-0 w-full h-full object-cover -z-10 opacity-25" 
+          />
+          <div>
+            <Navbar/>
+            <main className="bg-mypeken-white mx-auto flex flex-1 flex-col gap-x-6 p-4 sm:px-6 sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
+                {children}
+              <div className="w-full">
+                <Footer/>
+              </div>
+            </main>
           </div>
         </body>
     </html>
