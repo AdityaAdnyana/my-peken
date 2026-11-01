@@ -1,11 +1,11 @@
-import { Beef, Carrot, PawPrint, ShoppingBasket } from "lucide-react"
+import { Flower, Groceries, PawPrint, ShoppingBasket, Sofa } from "lucide-react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Suspense } from "react";
 const categories = [
     { name: "All", icon: <ShoppingBasket className="w-4 h-4"/>, slug: "all" },
-    { name: "Vegetables", icon: <Carrot className="w-4 h-4"/>, slug: "vegetables" },
-    { name: "Meat", icon: <Beef className="w-4 h-4"/>, slug: "meat" },
-    { name: "Pet Supplies", icon: <PawPrint className="w-4 h-4"/>, slug: "pet-supplies" },
+    { name: "Groceries", icon: <Groceries className="w-4 h-4"/>, slug: "groceries" },
+    { name: "Furniture", icon: <Sofa className="w-4 h-4"/>, slug: "furniture" },
+    { name: "Beauty", icon: <Flower className="w-4 h-4"/>, slug: "beauty" },
 ]
 
 const CategoryButtons = () => {

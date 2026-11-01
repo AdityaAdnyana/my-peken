@@ -1,10 +1,10 @@
 export type ProductType = {
     id: string | number;
-    name: string;
+    title: string;
     description: string;
     category: string;
     price:number;
-    images: string;
+    thumbnail: string;
 }
 
 export type ProductsType = ProductType[]
