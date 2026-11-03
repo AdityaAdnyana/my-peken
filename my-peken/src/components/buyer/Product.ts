@@ -5,6 +5,7 @@ export type ProductType = {
     category: string;
     price:number;
     thumbnail: string;
+    variant: [];
 }
 
 export type ProductsType = ProductType[]

@@ -183,7 +183,7 @@
   h5{
     font-family: var(--font-monserrat);
   }
-  body{
+  body, p{
     font-family: var(--font-inter);
   }
 }

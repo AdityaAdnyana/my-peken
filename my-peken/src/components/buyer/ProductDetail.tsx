@@ -2,6 +2,18 @@
 import { useProductDetail } from "@/services/ProductService";
 import Image from "next/image";
 import Loading from "../general/Loading";
+import { InboxIcon } from "lucide-react"
+import {
+    Item,
+    ItemContent,
+    ItemDescription,
+    ItemMedia,
+    ItemTitle,
+} from "@/components/ui/item"
+import { Button } from "../ui/button";
+import { ItemVariant } from "./ItemVariant";
+import { ProductType } from "./Product";
+import type { ReactElement } from "react";
 
 const ProductDetail = ({ id, params }: { id: string, params: "productpage" }) => {
 
@@ -17,25 +29,25 @@ const ProductDetail = ({ id, params }: { id: string, params: "productpage" }) =>
                     <Image src={product.thumbnail} alt={product.title} fill className="object-contain" />
                 </div>
             </div>
-            <div className="col-span-2 col-start-3 bg-mypeken-brand text-mypeken-white text-center">
+            <div className="col-span-2 col-start-3 text-mypeken-black text-center">
                 <div>
                     <div>
-                        Product Hook
+                        <p>{product.hook || "Produk Unggul"}</p>
                     </div>
                     <div>
-                        Judul Produk
+                        <h1>{product.title}</h1>
                     </div>
                     <div>
-                        Jumlah Terjual | Rating
+                        <p>Terjual {product.sellQuantity || "N/A"} | Rating {product.rating}</p>
                     </div>
                     <div>
-                        Harga
+                        <p>Rp {product.price}</p>
                     </div>
                 </div>
 
                 <div>
                     <div>
-                        Variant   
+                        {product.variant?.length > 0 && generateVariant({ product })}
                     </div>
                     <div>
                         Informasi produk
@@ -69,6 +81,33 @@ const ProductDetail = ({ id, params }: { id: string, params: "productpage" }) =>
             </div>
         </div>
     );
+};
+
+
+function generateVariant({product} : {product : ProductType}){
+
+    let productVariant = product.variant;
+    let variant_count = productVariant.length;
+
+    let variantComponent: ReactElement[] = []
+
+    productVariant.forEach(variant => {
+       variantComponent.push(<ItemVariant variant={variant}/>); 
+    });
+    
+
+    
+    
+    if (variant_count > 10) {
+        return <p>Terlalu Banyak Variant, Gagal Memuat...</p>;
+    }
+
+    return(
+        <div className={`grid grid-cols-${variant_count}`}>
+            {variantComponent}
+        </div>
+    );
+
 };
 
 
