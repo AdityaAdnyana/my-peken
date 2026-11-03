@@ -2,8 +2,8 @@
 
 import Image from "next/image"
 import { ShoppingCart } from "lucide-react"
-import { ProductType } from "./types"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { ProductType } from "./Product"
+import { usePathname, useRouter } from "next/navigation"
 
 const ProductCard = ({ product }: { product: ProductType }) => {
     const router = useRouter();

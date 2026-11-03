@@ -3,17 +3,15 @@
 import { useState } from "react"
 import Categories from "./Categories"
 import ProductCard from "./ProductCard"
-import { ProductType } from "./types"
+import { ProductType } from "./Product"
 import Link from "next/link"
 import Filter from "./Filter"
-import { useProduct } from "@/app/(products)/ProductService"
-import { error } from "console"
-
-
+import {useProduct} from "@/services/ProductService"
+import Loading from "../general/Loading"
 
 const ProductList = ({ category, params }: { category: string, params: "homepage" | "products" }) => {
     const { products, isLoading, isError } = useProduct();
-    if (isLoading) return <p className="text-center text-mypeken-gray mt-8">Memuat Produk...</p>
+    if (isLoading) return <Loading message="memuat data..."/>
     if (isError) return <p className="text-center text-mypeken-highligh mt-8">Error {isError}</p>
     
     category === null ? "all" : category;

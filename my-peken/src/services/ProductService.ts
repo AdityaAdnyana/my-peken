@@ -1,5 +1,5 @@
-import useSWR from 'swr'
-import { error } from "console";
+'use client'
+import useSWR from "swr"
 
 const fetcher = (url: string) => fetch(url).then(res => res.json())
 
@@ -15,7 +15,7 @@ export function useProduct() {
 
 export function useProductDetail(id: string | number){
     const { data, error, isLoading } = useSWR(
-        id ? `https://dummyjson.com/products${id}` : null, 
+        id ? `https://dummyjson.com/products/${id}` : null, 
         fetcher
     )
 

@@ -2,6 +2,7 @@ import Link from "next/link"
 import SearchBar from "./SearchBar"
 import { Bell, Home, MapPin, ShoppingCart, Store } from "lucide-react"
 import { Button } from "./ui/button"
+import { Item, ItemMedia } from "./ui/item"
 
 const Navbar = () => {
     return (
@@ -41,10 +42,15 @@ const Navbar = () => {
             </nav>
 
             <nav className="flex justify-end-safe px-7 bg-mypeken-white border-b border-gray-200 pb-4">
-                <div>
-                    <MapPin />
-                    <p>Dikirim ke <b>Jalan Mahendradatta No X Denpasar</b></p>
-                </div>
+                <Item className="flex justify-end-safe">
+                    <ItemMedia variant={"icon"}>
+                        <MapPin />
+                    </ItemMedia>
+                    <ItemMedia>
+                        <p>Dikirim ke <b>Jalan Mahendradatta No X Denpasar</b></p>
+                    </ItemMedia>
+                    
+                </Item>
             </nav>
         </nav>
         
