@@ -12,3 +12,16 @@ export function useProduct() {
         isError: error
     }
 }
+
+export function useProductDetail(id: string | number){
+    const { data, error, isLoading } = useSWR(
+        id ? `https://dummyjson.com/products${id}` : null, 
+        fetcher
+    )
+
+    return {
+        product: data,
+        isLoading,
+        isError: error
+    }
+}

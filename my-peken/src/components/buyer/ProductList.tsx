@@ -15,6 +15,8 @@ const ProductList = ({ category, params }: { category: string, params: "homepage
     const { products, isLoading, isError } = useProduct();
     if (isLoading) return <p className="text-center text-mypeken-gray mt-8">Memuat Produk...</p>
     if (isError) return <p className="text-center text-mypeken-highligh mt-8">Error {isError}</p>
+    
+    category === null ? "all" : category;
     const filteredProducts = category === "all" ? products : products.filter((product: ProductType) => product.category === category);
     return (
         <div className="">
