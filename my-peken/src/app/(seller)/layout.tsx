@@ -11,9 +11,9 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                 <SidebarInset>
                     <header>
                             <SidebarTrigger />
-                            <HeaderSeller />
+                            {/* <HeaderSeller /> */}
                     </header>
-                    <main className="p-5">
+                    <main className="">
                         {children}
                     </main>
                 </SidebarInset>

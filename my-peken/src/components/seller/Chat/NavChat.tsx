@@ -15,13 +15,13 @@ interface NavChatProps {
 export function NavChat({ user, lastChat = " " }: NavChatProps) {
 
     return (
-        <div className=" w-80 flex flex-row ">
+        <div className="flex flex-row rounded-xl bg-mypeken-white ">
             <Avatar>
                 <AvatarImage src={user.avatar} alt={user.name} />
             </Avatar>
             <div className="flex flex-col">
                 <p className="text-base font-semibold">
-                    {user.name.charAt(0).toUpperCase()}
+                    {user.name.toUpperCase()}
                 </p>
                 <p className="text-xs">{lastChat}</p>
             </div>
