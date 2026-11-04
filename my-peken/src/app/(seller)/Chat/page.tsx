@@ -14,7 +14,7 @@ export default function ChatSeller(){
     return(
         <main className=" flex flex-row">
             <ChatSideBar />
-            {/* <MainChat / */}
+            <MainChat />
         </main>
     )
 }
