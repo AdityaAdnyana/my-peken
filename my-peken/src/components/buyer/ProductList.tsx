@@ -14,7 +14,7 @@ const ProductList = ({ category, params }: { category: string, params: "homepage
     if (isLoading) return <Loading message="memuat data..."/>
     if (isError) return <p className="text-center text-mypeken-highligh mt-8">Error {isError}</p>
     
-    category === null ? "all" : category;
+    category = category || "all";
     const filteredProducts = category === "all" ? products : products.filter((product: ProductType) => product.category === category);
     return (
         <div className="">
@@ -26,7 +26,7 @@ const ProductList = ({ category, params }: { category: string, params: "homepage
                 ))}
             </div>
             {filteredProducts.length === 0 && (
-                <p className="text-center text-mypeken-gray mt-8">Produk tidak ditemukan. <p className="text-center text-mypeken-gray mt-8">Category saat ini: {category}</p></p>
+                <p className="text-center text-mypeken-gray mt-8">Produk tidak ditemukan.</p>
             )}
             <Link href={category ? `/products/?category=${category}` : "/products"} className="flex justify-end mt-4 underline text-sm text-mypeken-gray">Lihat Semua Produk</Link>
         </div>

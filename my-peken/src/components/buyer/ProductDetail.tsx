@@ -2,7 +2,7 @@
 import { useProductDetail } from "@/services/ProductService";
 import Image from "next/image";
 import Loading from "../general/Loading";
-import { InboxIcon } from "lucide-react"
+import { InboxIcon, Star } from "lucide-react"
 import {
     Item,
     ItemContent,
@@ -29,37 +29,45 @@ const ProductDetail = ({ id, params }: { id: string, params: "productpage" }) =>
                     <Image src={product.thumbnail} alt={product.title} fill className="object-contain" />
                 </div>
             </div>
-            <div className="col-span-2 col-start-3 text-mypeken-black text-center">
+            <div className="col-span-2 col-start-3 text-mypeken-black">
                 <div>
                     <div>
-                        <p>{product.hook || "Produk Unggul"}</p>
+                        <p className="text-mypeken-brand font-bold">{product.hook || "Produk Unggul"}</p>
                     </div>
                     <div>
-                        <h1>{product.title}</h1>
+                        <h1 className="font-bold text-xl">{product.title}</h1>
                     </div>
-                    <div>
-                        <p>Terjual {product.sellQuantity || "N/A"} | Rating {product.rating}</p>
+                    <div className="flex text-sm pt-1.5">
+                        <p>Terjual {product.sellQuantity || "N/A"} |</p>
+                        <p className="text-mypeken-cta font-bold">⭐{product.rating}</p>
                     </div>
-                    <div>
-                        <p>Rp {product.price}</p>
+                    <div className="pt-2">
+                        <p className="text-mypeken-brand font-semibold text-2xl">Rp {product.price}</p>
                     </div>
                 </div>
-
-                <div>
+                
+                <div className="border-t border-gray-200 pt-2">
                     <div>
                         {product.variant?.length > 0 && generateVariant({ product })}
                     </div>
                     <div>
-                        Informasi produk
+                        <p className="flex text-mypeken-gray">Minimum beli: <p className="text-mypeken-black px-2">{product.minimumOrderQuantity}</p></p>
+                        <div>
+                            <p className="text-mypeken-black">Dimensi dan Berat: </p>
+                            <p className="flex text-mypeken-gray">Lebar: <p className="text-mypeken-black px-2">{product.dimensions.width != null ? `${product.dimensions.width}cm` : "-" }</p></p>
+                            <p className="flex text-mypeken-gray">Tinggi: <p className="text-mypeken-black px-2">{product.dimensions.height != null ? `${product.dimensions.height}cm` : "-" }</p></p>
+                            <p className="flex text-mypeken-gray">Panjang: <p className="text-mypeken-black px-2">{product.dimensions.length != null ? `${product.dimensions.length}cm`: "-"}</p></p>
+                            <p className="flex text-mypeken-gray">Berat: <p className="text-mypeken-black px-2">{product.weight != null ? `${product.weight}g`: "-"}</p></p>
+                        </div>
                     </div>
-                    <div>
-                        Deskripsi
+                    <div className="pt-2">
+                        <p>{product.description}</p>
                     </div>
-                    <div>
-                        Ketersedian | Stok
+                    <div className="pt-2 font-medium">
+                        {product.stock > 0 ? <p className="text-mypeken-brand">Tersedia, Stok {product.stock} Item</p> : <p className="text-mypeken-highligh">Tidak Tersedia</p>} 
                     </div>
                 </div>
-
+{/* 
                 <div>
                     Nama Toko
                     Rating rata-rata, jumlah ulasan
@@ -67,11 +75,13 @@ const ProductDetail = ({ id, params }: { id: string, params: "productpage" }) =>
                 </div>
                 <div>
                     Daerah pengirim
-                </div>
+                </div> */}
+
             </div>
             <div className="col-span-2 col-start-5 bg-mypeken-brand text-mypeken-white text-center">
                 Formulir tambah transaksi
             </div>
+
             <div className="col-span-2 col-start-3 bg-mypeken-brand text-mypeken-white text-center">
                 Rating dan Ulasan
                 <div>
