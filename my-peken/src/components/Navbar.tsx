@@ -22,11 +22,11 @@ const Navbar = () => {
                 <Link href={"/"}>
                     <ShoppingCart className="w-4 h-4 text-mypeken-gray"/>
                 </Link>
-                <Link href={"./Mydashboard"}>
+                <Link href={"/Mydashboard"}>
                     <Store className="w-4 h-4 text-mypeken-gray"/>
                 </Link>
-                <Button variant={"secondary"}><Link href={"./login"}>Masuk</Link></Button>
-                <Button variant={"default"}><Link href={"./register"}>Daftar</Link></Button>
+                <Button variant={"secondary"}><Link href={"/login"}>Masuk</Link></Button>
+                <Button variant={"default"}><Link href={"/register"}>Daftar</Link></Button>
             </div>
         </nav>
     )
