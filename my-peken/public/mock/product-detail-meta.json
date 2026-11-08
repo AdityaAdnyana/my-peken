@@ -1,0 +1,69 @@
+{
+  "stores": {
+    "default": {
+      "name": "Peken Bali Official Store",
+      "badge": "Pedagang Terverifikasi",
+      "processTime": "± 2 Jam",
+      "origin": "Pasar Badung, Denpasar, Bali",
+      "localShippingCost": 8000,
+      "defaultShippingEstimate": "Pengiriman Instan Hari Ini / 1-2 Hari Kerja",
+      "defaultWarranty": "Garansi kualitas segar MyPeken 100% uang kembali jika produk rusak.",
+      "defaultReturnPolicy": "Pengembalian mudah maksimal 1x24 jam sejak pesanan diterima."
+    }
+  },
+  "hooksByCategory": {
+    "groceries": "Segar Pilihan Pasar Bali",
+    "beauty": "Produk Perawatan Terlaris",
+    "fragrances": "Aroma Eksklusif Pilihan",
+    "furniture": "Kualitas Terbaik & Kokoh",
+    "default": "Produk Unggulan MyPeken"
+  },
+  "variantsByCategory": {
+    "groceries": [
+      {
+        "id": "var-reg",
+        "name": "Kemasan Reguler",
+        "description": "Ukuran standar harian",
+        "priceMultiplier": 0,
+        "stockRatio": 1
+      },
+      {
+        "id": "var-family",
+        "name": "Paket Keluarga (2x)",
+        "description": "Lebih hemat untuk stok rumah",
+        "priceMultiplier": 0.85,
+        "stockRatio": 0.5
+      },
+      {
+        "id": "var-bundle",
+        "name": "Paket Grosir (5x)",
+        "description": "Cocok untuk usaha & warung",
+        "priceMultiplier": 3.5,
+        "stockRatio": 0.25
+      }
+    ],
+    "default": [
+      {
+        "id": "var-std",
+        "name": "Varian Standar",
+        "description": "Pilihan original sesuai foto",
+        "priceMultiplier": 0,
+        "stockRatio": 1
+      },
+      {
+        "id": "var-plus",
+        "name": "Paket Lengkap + Box",
+        "description": "Termasuk pelindung ekstra",
+        "priceMultiplier": 0.15,
+        "stockRatio": 0.6
+      },
+      {
+        "id": "var-bundle",
+        "name": "Paket Bundling Hemat",
+        "description": "Beli 2 lebih hemat",
+        "priceMultiplier": 0.85,
+        "stockRatio": 0.4
+      }
+    ]
+  }
+}
