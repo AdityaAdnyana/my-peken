@@ -33,7 +33,7 @@ const Navbar = () => {
                     <Link href={"/"} aria-label="Keranjang Belanja">
                         <ShoppingCart className="w-4 h-4 text-mypeken-gray"/>
                     </Link>
-                    <Link href={"/dashboard"} aria-label="Toko Saya">
+                    <Link href={"/Mydashboard"} aria-label="Toko Saya">
                         <Store className="w-4 h-4 text-mypeken-gray"/>
                     </Link>
                     <Button variant={"secondary"}><Link href={"/login"}>Masuk</Link></Button>
