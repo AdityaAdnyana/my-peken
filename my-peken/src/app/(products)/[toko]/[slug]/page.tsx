@@ -1,6 +1,7 @@
 import ProductDetail from "@/components/buyer/ProductDetail"
 import Loading from "@/components/general/Loading";
 import { Suspense } from "react";
+
 export const instant = false
 
 const ProductPage = async ({
@@ -15,7 +16,6 @@ const ProductPage = async ({
                 <ProductDetail id={id} params={"productpage"} />
             </Suspense>
         </div>
-
     )
 }
 

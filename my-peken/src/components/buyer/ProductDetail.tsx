@@ -1,124 +1,185 @@
-"use client"
+"use client";
+
+import { useState, useMemo } from "react";
+import Link from "next/link";
+import { useParams, useSearchParams } from "next/navigation";
 import { useProductDetail } from "@/services/ProductService";
-import Image from "next/image";
-import Loading from "../general/Loading";
-import { InboxIcon, Star } from "lucide-react"
+import { ProductReview, ProductVariant } from "./Product";
+import { formatStoreName } from "./product-detail/priceUtils";
 import {
-    Item,
-    ItemContent,
-    ItemDescription,
-    ItemMedia,
-    ItemTitle,
-} from "@/components/ui/item"
-import { Button } from "../ui/button";
-import { ItemVariant } from "./ItemVariant";
-import { ProductType } from "./Product";
-import type { ReactElement } from "react";
+    ProductDetailError,
+    ProductDetailSkeleton,
+} from "./product-detail/ProductDetailStates";
+import { ProductImageGallery } from "./product-detail/ProductImageGallery";
+import { ProductInfoSection } from "./product-detail/ProductInfoSection";
+import { ProductCheckoutSidebar } from "./product-detail/ProductCheckoutSidebar";
+import { ProductReviewsSection } from "./product-detail/ProductReviewsSection";
 
-const ProductDetail = ({ id, params }: { id: string, params: "productpage" }) => {
+interface ProductDetailProps {
+    id?: string;
+    toko?: string;
+    slug?: string;
+    params: "productpage";
+}
 
-    const { product, isLoading, isError } = useProductDetail(id);
-    if (isLoading) return (<Loading message="Memuat data..." />);
-    if (isError || !product) return (<p text-center text-mypeken-highligh mt-8>Gagal memuat produk</p>);
+const ProductDetail = ({ id, toko, params }: ProductDetailProps) => {
+    const searchParams = useSearchParams();
+    const routeParams = useParams<{ toko?: string; slug?: string }>();
 
+    const effectiveId = id || searchParams.get("id") || "1";
+    const effectiveToko = toko || routeParams?.toko;
 
-    return (
-        <div className="grid grid-cols-6 gap-4">
-            <div className="product-thumbnail col-span-2 col-start-1">
-                <div className="relative aspect-square">
-                    <Image src={product.thumbnail} alt={product.title} fill className="object-contain" />
-                </div>
-            </div>
-            <div className="col-span-2 col-start-3 text-mypeken-black">
-                <div>
-                    <div>
-                        <p className="text-mypeken-brand font-bold">{product.hook || "Produk Unggul"}</p>
-                    </div>
-                    <div>
-                        <h1 className="font-bold text-xl">{product.title}</h1>
-                    </div>
-                    <div className="flex text-sm pt-1.5">
-                        <p>Terjual {product.sellQuantity || "N/A"} |</p>
-                        <p className="text-mypeken-cta font-bold">⭐{product.rating}</p>
-                    </div>
-                    <div className="pt-2">
-                        <p className="text-mypeken-brand font-semibold text-2xl">Rp {product.price}</p>
-                    </div>
-                </div>
-                
-                <div className="border-t border-gray-200 pt-2">
-                    <div>
-                        {product.variant?.length > 0 && generateVariant({ product })}
-                    </div>
-                    <div>
-                        <p className="flex text-mypeken-gray">Minimum beli: <p className="text-mypeken-black px-2">{product.minimumOrderQuantity}</p></p>
-                        <div>
-                            <p className="text-mypeken-black">Dimensi dan Berat: </p>
-                            <p className="flex text-mypeken-gray">Lebar: <p className="text-mypeken-black px-2">{product.dimensions.width != null ? `${product.dimensions.width}cm` : "-" }</p></p>
-                            <p className="flex text-mypeken-gray">Tinggi: <p className="text-mypeken-black px-2">{product.dimensions.height != null ? `${product.dimensions.height}cm` : "-" }</p></p>
-                            <p className="flex text-mypeken-gray">Panjang: <p className="text-mypeken-black px-2">{product.dimensions.length != null ? `${product.dimensions.length}cm`: "-"}</p></p>
-                            <p className="flex text-mypeken-gray">Berat: <p className="text-mypeken-black px-2">{product.weight != null ? `${product.weight}g`: "-"}</p></p>
-                        </div>
-                    </div>
-                    <div className="pt-2">
-                        <p>{product.description}</p>
-                    </div>
-                    <div className="pt-2 font-medium">
-                        {product.stock > 0 ? <p className="text-mypeken-brand">Tersedia, Stok {product.stock} Item</p> : <p className="text-mypeken-highligh">Tidak Tersedia</p>} 
-                    </div>
-                </div>
-{/* 
-                <div>
-                    Nama Toko
-                    Rating rata-rata, jumlah ulasan
-                    Rata-rata waktu proses toko
-                </div>
-                <div>
-                    Daerah pengirim
-                </div> */}
+    const { product, storeMeta, isLoading, isError, mutate } = useProductDetail(effectiveId);
 
-            </div>
-            <div className="col-span-2 col-start-5 bg-mypeken-brand text-mypeken-white text-center">
-                Formulir tambah transaksi
-            </div>
+    const [selectedImageIdx, setSelectedImageIdx] = useState<number>(0);
+    const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
+    const [customReviews, setCustomReviews] = useState<ProductReview[]>([]);
 
-            <div className="col-span-2 col-start-3 bg-mypeken-brand text-mypeken-white text-center">
-                Rating dan Ulasan
-                <div>
-                    Box Rating
-                </div>
-                <div>Ulasan</div>
-            </div>
-        </div>
-    );
-};
+    const galleryImages = useMemo(() => {
+        if (!product) return [];
+        const imgs =
+            Array.isArray(product.images) && product.images.length > 0
+                ? product.images
+                : [product.thumbnail];
+        return imgs.includes(product.thumbnail) ? imgs : [product.thumbnail, ...imgs];
+    }, [product]);
 
+    const activeVariant: ProductVariant | undefined = useMemo(() => {
+        if (!product?.variant || product.variant.length === 0) return undefined;
+        if (selectedVariantId) {
+            return product.variant.find((v) => v.id === selectedVariantId) || product.variant[0];
+        }
+        return product.variant[0];
+    }, [product, selectedVariantId]);
 
-function generateVariant({product} : {product : ProductType}){
+    const allReviews = useMemo(() => {
+        const apiReviews = product?.reviews || [];
+        return [...customReviews, ...apiReviews];
+    }, [product?.reviews, customReviews]);
 
-    let productVariant = product.variant;
-    let variant_count = productVariant.length;
-
-    let variantComponent: ReactElement[] = []
-
-    productVariant.forEach(variant => {
-       variantComponent.push(<ItemVariant variant={variant}/>); 
-    });
-    
-
-    
-    
-    if (variant_count > 10) {
-        return <p>Terlalu Banyak Variant, Gagal Memuat...</p>;
+    if (isLoading) {
+        return <ProductDetailSkeleton />;
     }
 
-    return(
-        <div className={`grid grid-cols-${variant_count}`}>
-            {variantComponent}
-        </div>
+    if (isError || !product) {
+        return <ProductDetailError error={isError} onRetry={() => mutate()} />;
+    }
+
+    const minOrder = Math.max(1, product.minimumOrderQuantity || 1);
+    const availableStock =
+        typeof activeVariant?.stock === "number"
+            ? activeVariant.stock
+            : typeof product.stock === "number"
+            ? product.stock
+            : 0;
+
+    const unitPrice = product.price + (activeVariant?.priceDelta || 0);
+    const discountPct = product.discountPercentage || 0;
+    const originalUnitPrice =
+        discountPct > 0 ? unitPrice / (1 - discountPct / 100) : unitPrice;
+
+    const storeName = formatStoreName(effectiveToko, product.brand, storeMeta?.name);
+    const averageRating =
+        allReviews.length > 0
+            ? Number(
+                  (
+                      allReviews.reduce((acc, r) => acc + r.rating, 0) / allReviews.length
+                  ).toFixed(1)
+              )
+            : product.rating || 0;
+
+    const currentImage = galleryImages[selectedImageIdx] || product.thumbnail;
+
+    return (
+        <article
+            aria-label={`Detail produk ${product.title}`}
+            data-page={params}
+            className="space-y-8 text-mypeken-black"
+        >
+            {/* BREADCRUMB NAVIGATION */}
+            <nav
+                aria-label="Breadcrumb"
+                className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-mypeken-gray"
+            >
+                <ol className="flex flex-wrap items-center gap-1.5">
+                    <li>
+                        <Link
+                            href="/"
+                            className="hover:text-mypeken-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mypeken-brand rounded px-1"
+                        >
+                            Beranda
+                        </Link>
+                    </li>
+                    <li aria-hidden="true">/</li>
+                    <li>
+                        <Link
+                            href={`/?category=${encodeURIComponent(product.category)}`}
+                            className="capitalize hover:text-mypeken-brand hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-mypeken-brand rounded px-1"
+                        >
+                            {product.category}
+                        </Link>
+                    </li>
+                    <li aria-hidden="true">/</li>
+                    <li className="text-mypeken-gray">{storeName}</li>
+                    <li aria-hidden="true">/</li>
+                    <li
+                        aria-current="page"
+                        className="font-semibold text-mypeken-brand line-clamp-1 max-w-xs"
+                    >
+                        {product.title}
+                    </li>
+                </ol>
+            </nav>
+
+            {/* MAIN 3-COLUMN PRODUCT GRID */}
+            <div className="product-detail-grid">
+                <ProductImageGallery
+                    title={product.title}
+                    images={galleryImages}
+                    selectedImageIdx={selectedImageIdx}
+                    onSelectImage={setSelectedImageIdx}
+                />
+
+                <ProductInfoSection
+                    product={product}
+                    storeName={storeName}
+                    storeMeta={storeMeta}
+                    activeVariant={activeVariant}
+                    availableStock={availableStock}
+                    minOrder={minOrder}
+                    unitPrice={unitPrice}
+                    originalUnitPrice={originalUnitPrice}
+                    discountPct={discountPct}
+                    averageRating={averageRating}
+                    totalReviews={allReviews.length}
+                    onSelectVariant={(variant) => setSelectedVariantId(variant.id)}
+                />
+
+                <ProductCheckoutSidebar
+                    key={activeVariant?.id || "default-variant"}
+                    product={product}
+                    currentImage={currentImage}
+                    activeVariant={activeVariant}
+                    availableStock={availableStock}
+                    minOrder={minOrder}
+                    unitPrice={unitPrice}
+                    originalUnitPrice={originalUnitPrice}
+                    discountPct={discountPct}
+                    storeName={storeName}
+                />
+            </div>
+
+            {/* RATING DAN ULASAN PEMBELI */}
+            <ProductReviewsSection
+                allReviews={allReviews}
+                averageRating={averageRating}
+                activeVariantName={activeVariant?.name}
+                onAddReview={(newReview) =>
+                    setCustomReviews((prev) => [newReview, ...prev])
+                }
+            />
+        </article>
     );
-
 };
-
 
 export default ProductDetail;

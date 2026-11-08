@@ -3,6 +3,8 @@ import ProductList from "@/components/buyer/ProductList"
 import { Suspense } from "react";
 import Loading from "@/components/general/Loading";
 
+export const instant = false
+
 const Homepage = async ({
     searchParams,
 }: {

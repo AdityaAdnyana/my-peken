@@ -4,7 +4,8 @@ const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
-  reactCompiler: true,
+  reactCompiler: false,
+  htmlLimitedBots: /.*/,
   images: {
     remotePatterns: [new URL("https://cdn.dummyjson.com/product-images/**")],
   },
