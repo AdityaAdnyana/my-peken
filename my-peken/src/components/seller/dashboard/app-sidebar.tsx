@@ -90,6 +90,23 @@ const data = {
           url: "#",
         }
       ],
+    },
+    {
+      title: "Produk",
+      url: "#",
+      icon: (
+        <BookOpenIcon/>
+      ),
+      items: [
+        {
+          title: "Daftar Produk",
+          url: "#",
+        },
+        {
+          title: "Tambah Produk",
+          url: "#",
+        }
+      ],
     }
   ],
   projects: [

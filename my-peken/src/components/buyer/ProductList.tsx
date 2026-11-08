@@ -9,13 +9,13 @@ import Filter from "./Filter"
 import { useSearchParams } from "next/navigation"
 
 //TEMPORARY 
-const products: ProductType[] = [
+const constProducts: ProductType[] = [
     {
       id: 25,
       name: "Green Bell Pepper",
       description: "Fresh and vibrant green bell pepper, perfect for adding color and flavor to your dishes.",
       category: "vegetables",
-      price: 99000,
+      price: 10000000,
       images: "https://cdn.dummyjson.com/product-images/groceries/green-bell-pepper/1.webp",
     },
     {
@@ -53,7 +53,12 @@ const products: ProductType[] = [
 ];
 
 const ProductList = ({category, params}:{category:string, params:"homepage" | "products"}) => {
-  const filteredProducts = category === "all" ? products : products.filter(product => product.category === category);  
+  const [products, setProducts] = useState<ProductType[]>([...constProducts]);
+  const filteredProducts = category === "all" ? products : products.filter(product => product.category === category);
+  
+  const HandleCreateProduct = (newProduct: ProductType) => {
+    setProducts(prevProducts => [...prevProducts, newProduct]);
+  }
   return(
         <div className="">
             <Categories />
