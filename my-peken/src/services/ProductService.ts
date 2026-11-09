@@ -2,6 +2,7 @@
 
 import useSWR from "swr";
 import { ProductType, ProductVariant } from "@/components/buyer/Product";
+import rawMetaData from "../../public/mock/product-detail-meta.json";
 
 export interface StoreMeta {
     name: string;
@@ -30,40 +31,7 @@ interface ProductDetailMetaResponse {
     variantsByCategory: Record<string, RawVariantTemplate[]>;
 }
 
-const FALLBACK_STORE_META: StoreMeta = {
-    name: "Peken Bali Official Store",
-    badge: "Pedagang Terverifikasi",
-    processTime: "± 2 Jam",
-    origin: "Pasar Badung, Denpasar, Bali",
-    localShippingCost: 8000,
-    defaultShippingEstimate: "Pengiriman Instan Hari Ini / 1-2 Hari Kerja",
-    defaultWarranty: "Garansi kualitas segar MyPeken 100% uang kembali jika produk rusak.",
-    defaultReturnPolicy: "Pengembalian mudah maksimal 1x24 jam sejak pesanan diterima.",
-};
-
-const FALLBACK_VARIANTS: RawVariantTemplate[] = [
-    {
-        id: "var-std",
-        name: "Varian Standar",
-        description: "Pilihan original sesuai foto",
-        priceMultiplier: 0,
-        stockRatio: 1,
-    },
-    {
-        id: "var-plus",
-        name: "Paket Lengkap + Box",
-        description: "Termasuk pelindung ekstra",
-        priceMultiplier: 0.15,
-        stockRatio: 0.6,
-    },
-    {
-        id: "var-bundle",
-        name: "Paket Bundling Hemat",
-        description: "Beli 2 lebih hemat",
-        priceMultiplier: 0.85,
-        stockRatio: 0.4,
-    },
-];
+const metaData: ProductDetailMetaResponse = rawMetaData;
 
 export const fetcher = async (url: string) => {
     const res = await fetch(url);
@@ -108,62 +76,56 @@ export function useProductDetail(id?: string | number) {
         { shouldRetryOnError: false }
     );
 
-    const { data: metaData } = useSWR<ProductDetailMetaResponse>(
-        "/mock/product-detail-meta.json",
-        fetcher,
-        { shouldRetryOnError: false }
-    );
-
     const product: ProductType | undefined = productData
-        ? (() => {
-              const categoryKey = (productData.category || "").toLowerCase();
-              const templates =
-                  metaData?.variantsByCategory?.[categoryKey] ||
-                  metaData?.variantsByCategory?.default ||
-                  FALLBACK_VARIANTS;
-              const baseStock = typeof productData.stock === "number" ? productData.stock : 20;
-
-              const fetchedVariants: ProductVariant[] =
-                  Array.isArray(productData.variant) && productData.variant.length > 0
-                      ? productData.variant
-                      : templates.map((tpl) => ({
-                            id: `${productData.id}-${tpl.id}`,
-                            name: tpl.name,
-                            description: tpl.description,
-                            priceDelta:
-                                Math.round(productData.price * tpl.priceMultiplier * 100) / 100,
-                            stock: Math.max(1, Math.floor(baseStock * tpl.stockRatio)),
-                        }));
-
-              const idNum = Number(productData.id) || 1;
-              const computedSellQuantity =
-                  productData.sellQuantity ??
-                  idNum * 25 + (productData.reviews?.length || 0) * 10;
-
-              return {
-                  ...productData,
-                  hook:
-                      productData.hook ||
-                      metaData?.hooksByCategory?.[categoryKey] ||
-                      metaData?.hooksByCategory?.default ||
-                      "Produk Unggulan MyPeken",
-                  sellQuantity: computedSellQuantity,
-                  dimensions: {
-                      width: productData.dimensions?.width,
-                      height: productData.dimensions?.height,
-                      depth: productData.dimensions?.depth,
-                      length: productData.dimensions?.length ?? productData.dimensions?.depth,
-                  },
-                  variant: fetchedVariants,
-              };
-          })()
+        ? normalizeProduct(productData)
         : undefined;
 
     return {
         product,
-        storeMeta: metaData?.stores?.default || FALLBACK_STORE_META,
+        storeMeta: metaData.stores.default,
         isLoading: isProductLoading,
         isError: productError,
         mutate,
+    };
+}
+
+function normalizeProduct(productData: ProductType): ProductType {
+    const categoryKey = (productData.category || "").toLowerCase();
+    const templates =
+        metaData.variantsByCategory[categoryKey] ||
+        metaData.variantsByCategory.default;
+    const baseStock = typeof productData.stock === "number" ? productData.stock : 20;
+
+    const fetchedVariants: ProductVariant[] =
+        Array.isArray(productData.variant) && productData.variant.length > 0
+            ? productData.variant
+            : templates.map((tpl) => ({
+                  id: `${productData.id}-${tpl.id}`,
+                  name: tpl.name,
+                  description: tpl.description,
+                  priceDelta:
+                      Math.round(productData.price * tpl.priceMultiplier * 100) / 100,
+                  stock: Math.max(1, Math.floor(baseStock * tpl.stockRatio)),
+              }));
+
+    const idNum = Number(productData.id) || 1;
+    const computedSellQuantity =
+        productData.sellQuantity ??
+        idNum * 25 + (productData.reviews?.length || 0) * 10;
+
+    return {
+        ...productData,
+        hook:
+            productData.hook ||
+            metaData.hooksByCategory[categoryKey] ||
+            metaData.hooksByCategory.default,
+        sellQuantity: computedSellQuantity,
+        dimensions: {
+            width: productData.dimensions?.width,
+            height: productData.dimensions?.height,
+            depth: productData.dimensions?.depth,
+            length: productData.dimensions?.length ?? productData.dimensions?.depth,
+        },
+        variant: fetchedVariants,
     };
 }
