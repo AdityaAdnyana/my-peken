@@ -65,7 +65,7 @@ function validateKyc(data: KycFormData, files: Record<UploadKey, FileEntry>) {
   if (!files.fotoKtp.file) errs.fotoKtp = "Foto KTP wajib diunggah.";
   if (!files.selfieKtp.file) errs.selfieKtp = "Foto selfie dengan KTP wajib diunggah.";
   if (!data.bank) errs.bank = "Silakan pilih bank pencairan.";
-  if (!/^\d{8,20}$/.test(data.nomorRekening)) errs.nomorRekening = "Nomor rekening harus 8–20 digit angka.";
+  if (!/^\d{8,20}$/.test(data.nomorRekening)) errs.nomorRekening = "Nomor rekening harus 8-20 digit angka.";
   if (data.namaPemilik.trim().length < 3) errs.namaPemilik = "Nama pemilik rekening minimal 3 karakter.";
   if (!data.kabupaten) errs.kabupaten = "Silakan pilih kabupaten/kota di Bali.";
   if (data.alamatLengkap.trim().length < 10) errs.alamatLengkap = "Alamat lengkap toko minimal 10 karakter.";
@@ -88,6 +88,8 @@ export function KycRegistrationForm() {
   const kabupatenOpts = useFetchOptions("/data/kabupaten.json", "kabupaten");
 
   useEffect(() => {
+    sessionStorage.removeItem("mypeken_kyc_submission");
+    window.dispatchEvent(new Event("storage"));
     const active = previewsRef.current;
     return () => Object.values(active).forEach((url) => url && URL.revokeObjectURL(url));
   }, []);
@@ -128,6 +130,8 @@ export function KycRegistrationForm() {
     setFiles(EMPTY_FILES);
     setErrors({});
     setFormAlert(null);
+    sessionStorage.removeItem("mypeken_kyc_submission");
+    window.dispatchEvent(new Event("storage"));
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -148,8 +152,13 @@ export function KycRegistrationForm() {
     try {
       sessionStorage.setItem(
         "mypeken_kyc_submission",
-        JSON.stringify({ namaToko: form.namaToko.trim(), namaPemilik: form.namaPemilik.trim() })
+        JSON.stringify({
+          submitted: true,
+          namaToko: form.namaToko.trim(),
+          namaPemilik: form.namaPemilik.trim(),
+        })
       );
+      window.dispatchEvent(new Event("storage"));
       router.push("/seller/kyc/verification");
     } catch {
       setIsSubmitting(false);
@@ -159,6 +168,14 @@ export function KycRegistrationForm() {
 
   return (
     <section aria-labelledby="kyc-heading" className="flex flex-col gap-5">
+      <style>{`
+        [data-slot="sidebar-wrapper"]:has(#kyc-heading) > [data-slot="sidebar"] {
+          display: none !important;
+        }
+        [data-slot="sidebar-wrapper"]:has(#kyc-heading) {
+          min-height: 0 !important;
+        }
+      `}</style>
       <h1 id="kyc-heading" className="text-xl font-semibold text-neutral-900 sm:text-2xl">
         Pendaftaran Profil &amp; KYC Toko
       </h1>
