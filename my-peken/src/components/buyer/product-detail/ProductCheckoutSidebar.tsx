@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ProductType, ProductVariant } from "../Product";
 import { formatRupiah } from "./priceUtils";
+import { useAddToCart } from "@/hooks/use-add-to-cart";
 
 interface ProductCheckoutSidebarProps {
     product: ProductType;
@@ -42,6 +43,8 @@ export function ProductCheckoutSidebar({
     discountPct,
     storeName,
 }: ProductCheckoutSidebarProps) {
+    const addToCart = useAddToCart();
+
     const [quantityInput, setQuantityInput] = useState<string>("");
     const [note, setNote] = useState<string>("");
     const [showNoteInput, setShowNoteInput] = useState<boolean>(false);
@@ -111,16 +114,24 @@ export function ProductCheckoutSidebar({
             return;
         }
         setOrderError(null);
+
+        // Belum login → hook simpan pending item & redirect ke /login
+        const added = addToCart(product, {
+            qty: safeQuantity,
+            unitPrice,
+            variant: activeVariant,
+            note,
+            storeName,
+            buyNow: actionType === "buy",
+        });
+        if (!added) return;
+
         const variantLabel = activeVariant ? ` (${activeVariant.name})` : "";
-        if (actionType === "cart") {
-            setOrderSuccess(
-                `Berhasil menambahkan ${safeQuantity}x "${product.title}"${variantLabel} ke keranjang!`
-            );
-        } else {
-            setOrderSuccess(
-                `Pesanan ${safeQuantity}x "${product.title}"${variantLabel} siap diproses ke pembayaran.`
-            );
-        }
+        setOrderSuccess(
+            actionType === "cart"
+                ? `Berhasil menambahkan ${safeQuantity}x "${product.title}"${variantLabel} ke keranjang!`
+                : `Mengarahkan ${safeQuantity}x "${product.title}"${variantLabel} ke halaman checkout...`
+        );
     };
 
     const handleShare = async () => {
