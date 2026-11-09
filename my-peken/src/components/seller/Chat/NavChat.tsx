@@ -25,7 +25,6 @@ export function NavChat({ user, lastChat = " " }: NavChatProps) {
                 </p>
                 <p className="text-xs">{lastChat}</p>
             </div>
-            
         </div>
     )
 }

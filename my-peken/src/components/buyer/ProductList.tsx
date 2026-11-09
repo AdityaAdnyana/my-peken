@@ -15,7 +15,7 @@ const constProducts: ProductType[] = [
       name: "Green Bell Pepper",
       description: "Fresh and vibrant green bell pepper, perfect for adding color and flavor to your dishes.",
       category: "vegetables",
-      price: 10000000,
+      price: 990000,
       images: "https://cdn.dummyjson.com/product-images/groceries/green-bell-pepper/1.webp",
     },
     {

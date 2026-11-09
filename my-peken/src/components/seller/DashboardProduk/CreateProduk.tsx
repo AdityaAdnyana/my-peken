@@ -17,8 +17,9 @@ const CreateProduk = ({ onAdd }: { onAdd: (product: ProductType) => void }) => {
 
     return (
         <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+             <input type="text" placeholder="Image URL" value={formData.images} onChange={(e) => setFormData({ ...formData, images: e.target.value })} required />
             <input type="text" placeholder="Product Name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required />
-            <textarea placeholder="Description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
+            <textarea className="h-64" placeholder="Description" value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} required />
             <input type="text" placeholder="Category" value={formData.category} onChange={(e) => setFormData({ ...formData, category: e.target.value })} required />
             <input
                 type="number"
@@ -32,8 +33,8 @@ const CreateProduk = ({ onAdd }: { onAdd: (product: ProductType) => void }) => {
                     });
                 }}
                 required
-            />            <input type="text" placeholder="Image URL" value={formData.images} onChange={(e) => setFormData({ ...formData, images: e.target.value })} required />
-            <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">Add Product</button>
+            />            
+            <button type="submit" className="bg-mypeken-brand text-white py-2 px-4 rounded">Add Product</button>
         </form>
     );
 
