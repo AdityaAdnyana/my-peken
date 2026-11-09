@@ -26,6 +26,7 @@
     --color-sidebar-primary: var(--sidebar-primary);
     --color-sidebar-foreground: var(--sidebar-foreground);
     --color-sidebar: var(--sidebar);
+    --color-sidebar-sidebar: var(--sidebar);
     
     --color-chart-5: var(--chart-5);
     --color-chart-4: var(--chart-4);
@@ -153,7 +154,7 @@
     --muted:var(--color-mypeken-light-gray);
     --muted-foreground: var(--color-mypeken-gray);
 
-    --border: var(--color-mypeken-gray);
+    --border: var(--color-mypeken-light-gray);
 
     /* Form */    
     --input: var(--color-mypeken-gray);
@@ -168,6 +169,16 @@
 
     /* layout & card value*/
     --border-mypeken-rounded: var(--border-rounded-xl);
+
+    /* Sidebar colors */
+--sidebar: var(--color-mypeken-white);             /* background sidebar */
+--sidebar-foreground: var(--color-mypeken-black);  /* teks */
+--sidebar-primary: var(--color-mypeken-brand);     /* elemen primary */
+--sidebar-primary-foreground: var(--color-mypeken-white);
+--sidebar-accent: var(--color-mypeken-light-gray); /* hover/active bg */
+--sidebar-accent-foreground: var(--color-mypeken-black);
+--sidebar-border: var(--color-mypeken-gray);       /* border */
+--sidebar-ring: var(--color-mypeken-brand);        /* focus ring */
   }
 }
 
@@ -183,24 +194,94 @@
   h5{
     font-family: var(--font-monserrat);
   }
-  body{
+  body, p{
     font-family: var(--font-inter);
   }
 }
 
-@layer utilities{
-  :root {
-    --font-monserrat: 'Montserrat', sans-serif;
-    --font-inter: 'Inter', sans-serif;
+/* ==========================================================================
+   Product Detail Responsive Layout & Media Queries (Flexbox + CSS Grid)
+   ========================================================================== */
+
+.product-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.product-specs-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.5rem;
+}
+
+.product-variants-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+/* Media Query 1: Small mobile devices (max-width: 480px) */
+@media screen and (max-width: 480px) {
+  .product-detail-grid {
+    gap: 1rem;
   }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5{
-    font-family: var(--font-monserrat);
+  .product-action-buttons {
+    flex-direction: column;
   }
-  body{
-    font-family: var(--font-inter);
+}
+
+/* Media Query 2: Large Mobile & Small Tablet (min-width: 640px) */
+@media screen and (min-width: 640px) {
+  .product-specs-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .product-variants-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Media Query 3: Tablet Landscape (min-width: 768px) */
+@media screen and (min-width: 768px) {
+  .product-detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+}
+
+/* Media Query 4: Desktop (min-width: 1024px) */
+@media screen and (min-width: 1024px) {
+  .product-detail-grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+  .product-gallery-col {
+    grid-column: span 4 / span 4;
+  }
+  .product-info-col {
+    grid-column: span 5 / span 5;
+  }
+  .product-checkout-col {
+    grid-column: span 3 / span 3;
+  }
+}
+
+/* Media Query 5: Wide Desktop (min-width: 1280px) */
+@media screen and (min-width: 1280px) {
+  .product-variants-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* Media Query 6: Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
