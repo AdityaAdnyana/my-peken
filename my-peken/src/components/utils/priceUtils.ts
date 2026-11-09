@@ -1,4 +1,4 @@
-const USD_TO_IDR_RATE = 16000;
+const USD_TO_IDR_RATE = 18000;
 
 export function formatRupiah(priceValue: number): string {
     const idrAmount =

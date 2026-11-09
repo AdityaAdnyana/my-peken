@@ -167,25 +167,3 @@ export function useProductDetail(id?: string | number) {
         mutate,
     };
 }
-
-export function useRelatedProducts(category?: string, excludeId?: string | number) {
-    const cleanCategory = category ? category.trim().toLowerCase() : "";
-    const { data, error, isLoading, mutate } = useSWR(
-        cleanCategory
-            ? `https://dummyjson.com/products/category/${encodeURIComponent(cleanCategory)}?limit=6`
-            : null,
-        fetcher
-    );
-
-    const allProducts: ProductType[] = data?.products || [];
-    const relatedProducts = allProducts
-        .filter((item) => String(item.id) !== String(excludeId))
-        .slice(0, 4);
-
-    return {
-        relatedProducts,
-        isLoading,
-        isError: error,
-        mutate,
-    };
-}
