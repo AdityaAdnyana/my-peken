@@ -1,10 +1,15 @@
+"use client"
+
 import Link from "next/link"
 import SearchBar from "./SearchBar"
 import { Bell, Home, MapPin, ShoppingCart, Store } from "lucide-react"
 import { Button } from "./ui/button"
 import { Item, ItemMedia } from "./ui/item"
+import { useCart } from "@/context/cart-context"
 
 const Navbar = () => {
+    const { totalQty } = useCart();
+
     return (
         <header>
             <div className="flex justify-end-safe px-7 py-1 text-sm bg-mypeken-light-gray">
@@ -30,8 +35,13 @@ const Navbar = () => {
                     <Link href={"/"} aria-label="Notifikasi">
                         <Bell className="w-4 h-4 text-mypeken-gray"/>
                     </Link>
-                    <Link href={"/"} aria-label="Keranjang Belanja">
+                    <Link href={"/cart"} aria-label="Keranjang Belanja" className="relative">
                         <ShoppingCart className="w-4 h-4 text-mypeken-gray"/>
+                        {totalQty > 0 && (
+                            <span className="absolute -top-2 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-mypeken-highligh px-1 text-[10px] font-semibold text-white">
+                                {totalQty}
+                            </span>
+                        )}
                     </Link>
                     <Link href={"/Mydashboard"} aria-label="Toko Saya">
                         <Store className="w-4 h-4 text-mypeken-gray"/>
