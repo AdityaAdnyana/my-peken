@@ -2,7 +2,7 @@
 // import { ProductType } from "@/components/buyer/Product";
 
 
-// const CreateProduk = ({ onAdd }: { onAdd: (product: ProductType) => void }) => {
+const CreateProduk = () => {
 //     const [formData, setFormData] = useState({
 //         title: "", description: "", category: "", price: 0
 //     });
@@ -38,8 +38,8 @@
 //             />            
 //             <button type="submit" className="bg-mypeken-brand text-white py-2 px-4 rounded">Add Product</button>
 //         </form>
-//     );
+    // );
 
-// }
+}
 
-// export default CreateProduk
+export default CreateProduk
