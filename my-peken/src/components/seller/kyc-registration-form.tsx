@@ -40,8 +40,8 @@ const EMPTY_FILES: Record<UploadKey, FileEntry> = {
 
 const FIELD_ORDER: Array<{ key: FieldKey; id: string }> = [
   { key: "namaToko", id: "nama-toko" }, { key: "nomorTelepon", id: "nomor-telepon" },
-  { key: "deskripsiToko", id: "deskripsi-toko" }, { key: "logoToko", id: "logo-toko" },
-  { key: "nik", id: "nik" }, { key: "fotoKtp", id: "foto-ktp" }, { key: "selfieKtp", id: "selfie-ktp" },
+  { key: "deskripsiToko", id: "deskripsi-toko" }, { key: "logoToko", id: "logo-toko-btn" },
+  { key: "nik", id: "nik" }, { key: "fotoKtp", id: "foto-ktp-btn" }, { key: "selfieKtp", id: "selfie-ktp-btn" },
   { key: "bank", id: "pilih-bank" }, { key: "nomorRekening", id: "nomor-rekening" },
   { key: "namaPemilik", id: "nama-pemilik" }, { key: "kabupaten", id: "kabupaten" },
   { key: "alamatLengkap", id: "alamat-toko" },
@@ -52,10 +52,12 @@ const subcardCls = "flex flex-col gap-3 rounded-xl border border-mypeken-light-g
 const resetBtnCls = "cursor-pointer rounded-lg px-4 py-2 text-sm font-semibold text-neutral-800 hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-mypeken-brand max-[479px]:w-full";
 const submitBtnCls = "inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#088218] px-5 py-2 text-sm font-semibold text-white transition-colors motion-reduce:transition-none hover:bg-[#066d14] focus-visible:outline-2 focus-visible:outline-mypeken-brand disabled:cursor-not-allowed disabled:opacity-65 max-[479px]:w-full";
 
+const PHONE_RE = /^(\+62|62|0)8[1-9][0-9]{7,11}$/;
+
 function validateKyc(data: KycFormData, files: Record<UploadKey, FileEntry>) {
   const errs: Partial<Record<FieldKey, string>> = {};
   if (data.namaToko.trim().length < 3) errs.namaToko = "Nama toko minimal 3 karakter.";
-  if (!/^(\+62|62|0)8[1-9][0-9]{7,11}$/.test(data.nomorTelepon.trim()))
+  if (!PHONE_RE.test(data.nomorTelepon.trim()))
     errs.nomorTelepon = "Masukkan nomor HP aktif Indonesia (contoh: 081234567890).";
   if (data.deskripsiToko.trim().length < 10) errs.deskripsiToko = "Deskripsi singkat minimal 10 karakter.";
   if (!files.logoToko.file) errs.logoToko = "Foto/logo toko wajib diunggah.";
@@ -64,7 +66,7 @@ function validateKyc(data: KycFormData, files: Record<UploadKey, FileEntry>) {
   if (!files.selfieKtp.file) errs.selfieKtp = "Foto selfie dengan KTP wajib diunggah.";
   if (!data.bank) errs.bank = "Silakan pilih bank pencairan.";
   if (!/^\d{8,20}$/.test(data.nomorRekening)) errs.nomorRekening = "Nomor rekening harus 8–20 digit angka.";
-  if (data.namaPemilik.trim().length < 3) errs.namaPemilik = "Nama pemilik rekening wajib diisi.";
+  if (data.namaPemilik.trim().length < 3) errs.namaPemilik = "Nama pemilik rekening minimal 3 karakter.";
   if (!data.kabupaten) errs.kabupaten = "Silakan pilih kabupaten/kota di Bali.";
   if (data.alamatLengkap.trim().length < 10) errs.alamatLengkap = "Alamat lengkap toko minimal 10 karakter.";
   return errs;
@@ -94,6 +96,12 @@ export function KycRegistrationForm() {
     setForm((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => (prev[key] ? { ...prev, [key]: undefined } : prev));
     if (formAlert) setFormAlert(null);
+  }
+
+  function handleBlur<K extends keyof KycFormData>(key: K) {
+    if (!form[key].trim()) return;
+    const fieldErr = validateKyc(form, files)[key];
+    setErrors((prev) => ({ ...prev, [key]: fieldErr }));
   }
 
   function handleFileSelect(key: UploadKey, file: File) {
@@ -175,16 +183,22 @@ export function KycRegistrationForm() {
               <h2 id="profil-toko-title" className="text-base font-semibold text-neutral-900">Profil Toko</h2>
             </header>
 
-            <InputField id="nama-toko" name="namaToko" label="Nama Toko" required value={form.namaToko}
-              onChange={(v) => updateField("namaToko", v)} placeholder="Masukkan nama toko" error={errors.namaToko} />
+            <InputField id="nama-toko" name="namaToko" label="Nama Toko" required maxLength={50}
+              counter={`${form.namaToko.length}/50 karakter`} counterValid={form.namaToko.trim().length >= 3}
+              value={form.namaToko} onChange={(v) => updateField("namaToko", v)} onBlur={() => handleBlur("namaToko")}
+              placeholder="Masukkan nama toko" error={errors.namaToko} />
 
             <InputField id="nomor-telepon" name="nomorTelepon" type="tel" inputMode="tel" label="Nomor Telepon Toko"
-              required value={form.nomorTelepon} onChange={(v) => updateField("nomorTelepon", v.replace(/[^\d+]/g, "").slice(0, 15))}
-              placeholder="Contoh: 081234567890" hint="Gunakan nomor telepon aktif untuk menerima verifikasi & pesanan pembeli"
-              error={errors.nomorTelepon} />
+              required maxLength={15} counter={`${form.nomorTelepon.length} digit`}
+              counterValid={PHONE_RE.test(form.nomorTelepon.trim())} value={form.nomorTelepon}
+              onChange={(v) => updateField("nomorTelepon", v.replace(/[^\d+]/g, "").slice(0, 15))}
+              onBlur={() => handleBlur("nomorTelepon")} placeholder="Contoh: 081234567890"
+              hint="Gunakan nomor telepon aktif untuk menerima verifikasi & pesanan pembeli" error={errors.nomorTelepon} />
 
             <InputField id="deskripsi-toko" name="deskripsiToko" label="Deskripsi Singkat Toko" required multiline rows={4}
-              value={form.deskripsiToko} onChange={(v) => updateField("deskripsiToko", v)}
+              maxLength={300} counter={`${form.deskripsiToko.length}/300 karakter`}
+              counterValid={form.deskripsiToko.trim().length >= 10} value={form.deskripsiToko}
+              onChange={(v) => updateField("deskripsiToko", v)} onBlur={() => handleBlur("deskripsiToko")}
               placeholder="Ceritakan produk unggulan atau ciri khas toko Anda" error={errors.deskripsiToko} />
 
             <UploadBox id="logo-toko" label="Upload Foto/Logo Toko" hint="Upload Foto" variant="large" required
@@ -202,9 +216,9 @@ export function KycRegistrationForm() {
             </header>
 
             <InputField id="nik" name="nik" label="NIK (Nomor KTP)" required inputMode="numeric" maxLength={16}
-              counter={`${form.nik.length}/16 digit`} value={form.nik}
+              counter={`${form.nik.length}/16 digit`} counterValid={/^\d{16}$/.test(form.nik)} value={form.nik}
               onChange={(v) => updateField("nik", v.replace(/\D/g, "").slice(0, 16))}
-              placeholder="Masukkan 16 digit NIK" error={errors.nik} />
+              onBlur={() => handleBlur("nik")} placeholder="Masukkan 16 digit NIK" error={errors.nik} />
 
             <div className="grid grid-cols-2 gap-3 max-[479px]:grid-cols-1 md:gap-4">
               <UploadBox id="foto-ktp" label="Foto KTP" hint="Scan/Foto Asli" required
@@ -227,10 +241,14 @@ export function KycRegistrationForm() {
                   value={form.bank} options={bankOpts.data} loading={bankOpts.isLoading} fetchError={bankOpts.error}
                   onRetry={bankOpts.retry} onChange={(v) => updateField("bank", v)} error={errors.bank} />
                 <InputField id="nomor-rekening" name="nomorRekening" label="Nomor Rekening" required hideLabel
-                  inputMode="numeric" maxLength={20} placeholder="Nomor Rekening" value={form.nomorRekening}
+                  inputMode="numeric" maxLength={20} counter={`${form.nomorRekening.length}/20 digit (min. 8)`}
+                  counterValid={/^\d{8,20}$/.test(form.nomorRekening)} placeholder="Nomor Rekening"
+                  value={form.nomorRekening} onBlur={() => handleBlur("nomorRekening")}
                   onChange={(v) => updateField("nomorRekening", v.replace(/\D/g, "").slice(0, 20))} error={errors.nomorRekening} />
-                <InputField id="nama-pemilik" name="namaPemilik" label="Nama Pemilik" required hideLabel
-                  placeholder="Nama Pemilik" value={form.namaPemilik}
+                <InputField id="nama-pemilik" name="namaPemilik" label="Nama Pemilik" required hideLabel maxLength={60}
+                  counter={`${form.namaPemilik.length}/60 karakter (min. 3)`}
+                  counterValid={form.namaPemilik.trim().length >= 3}
+                  placeholder="Nama Pemilik" value={form.namaPemilik} onBlur={() => handleBlur("namaPemilik")}
                   onChange={(v) => updateField("namaPemilik", v)} error={errors.namaPemilik} />
               </div>
             </fieldset>
@@ -247,8 +265,10 @@ export function KycRegistrationForm() {
                   fetchError={kabupatenOpts.error} onRetry={kabupatenOpts.retry}
                   onChange={(v) => updateField("kabupaten", v)} error={errors.kabupaten} />
                 <InputField id="alamat-toko" name="alamatLengkap" label="Alamat Lengkap Toko" required hideLabel multiline rows={3}
+                  maxLength={250} counter={`${form.alamatLengkap.length}/250 karakter`}
+                  counterValid={form.alamatLengkap.trim().length >= 10}
                   placeholder="Alamat Lengkap Toko (Jalan, Banjar, dll)" value={form.alamatLengkap}
-                  onChange={(v) => updateField("alamatLengkap", v)} error={errors.alamatLengkap} />
+                  onBlur={() => handleBlur("alamatLengkap")} onChange={(v) => updateField("alamatLengkap", v)} error={errors.alamatLengkap} />
               </div>
             </fieldset>
           </section>

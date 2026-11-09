@@ -22,9 +22,11 @@ export interface InputFieldProps {
   label: string;
   value: string;
   onChange?: (value: string) => void;
+  onBlur?: () => void;
   placeholder?: string;
   hint?: string;
   counter?: string;
+  counterValid?: boolean;
   error?: string;
   type?: "text" | "tel";
   inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
@@ -37,13 +39,27 @@ export interface InputFieldProps {
 }
 
 export function InputField({
-  id, name, label, value, onChange, placeholder, hint, counter,
-  error, type = "text", inputMode, maxLength, readOnly = false,
-  required = false, hideLabel = false, multiline = false, rows = 3,
+  id, name, label, value, onChange, onBlur, placeholder, hint, counter,
+  counterValid = false, error, type = "text", inputMode, maxLength,
+  readOnly = false, required = false, hideLabel = false, multiline = false, rows = 3,
 }: InputFieldProps) {
   const describedBy = [hint ? `${id}-hint` : "", error ? `${id}-error` : ""]
     .filter(Boolean)
     .join(" ") || undefined;
+
+  const counterNode = counter ? (
+    <span aria-live="polite" className={`shrink-0 text-xs ${counterValid ? "font-medium text-emerald-700" : "text-neutral-500"}`}>
+      {counter}{counterValid ? " ✓" : ""}
+    </span>
+  ) : null;
+
+  const shared = {
+    id, name, value, placeholder, maxLength, readOnly, onBlur,
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange?.(e.target.value),
+    "aria-required": required,
+    "aria-invalid": Boolean(error),
+    "aria-describedby": describedBy,
+  };
 
   return (
     <div className="flex flex-col gap-1.5">
@@ -52,44 +68,24 @@ export function InputField({
           {label}
           {required && <span className="ml-0.5 text-red-600" aria-hidden="true">*</span>}
         </label>
-        {counter && <span className="text-xs text-neutral-500" aria-live="polite">{counter}</span>}
+        {!hideLabel && counterNode}
       </div>
 
       {multiline ? (
-        <textarea
-          id={id}
-          name={name}
-          rows={rows}
-          value={value}
-          onChange={(e) => onChange?.(e.target.value)}
-          placeholder={placeholder}
-          readOnly={readOnly}
-          aria-required={required}
-          aria-invalid={Boolean(error)}
-          aria-describedby={describedBy}
-          className={`${fieldCls} resize-y`}
-        />
+        <textarea {...shared} rows={rows} className={`${fieldCls} resize-y`} />
       ) : (
-        <input
-          id={id}
-          name={name}
-          type={type}
-          value={value}
-          onChange={(e) => onChange?.(e.target.value)}
-          placeholder={placeholder}
-          inputMode={inputMode}
-          maxLength={maxLength}
-          readOnly={readOnly}
-          aria-readonly={readOnly || undefined}
-          aria-required={required}
-          aria-invalid={Boolean(error)}
-          aria-describedby={describedBy}
-          className={fieldCls}
-        />
+        <input {...shared} type={type} inputMode={inputMode} aria-readonly={readOnly || undefined} className={fieldCls} />
       )}
 
-      {hint && <p id={`${id}-hint`} className="text-xs text-neutral-500">{hint}</p>}
-      {error && <p id={`${id}-error`} role="alert" className="text-xs text-red-600">{error}</p>}
+      {(hint || error || (hideLabel && counterNode)) && (
+        <div className="flex items-start justify-between gap-2">
+          <div className="flex flex-col gap-0.5">
+            {hint && <p id={`${id}-hint`} className="text-xs text-neutral-500">{hint}</p>}
+            {error && <p id={`${id}-error`} role="alert" className="text-xs text-red-600">{error}</p>}
+          </div>
+          {hideLabel && counterNode}
+        </div>
+      )}
     </div>
   );
 }
@@ -154,7 +150,7 @@ export function SelectField({
         <div id={errId} role="alert" className="flex items-center justify-between gap-2 rounded-md bg-red-50 px-2.5 py-1.5 text-xs text-red-700">
           <span>{fetchError}</span>
           {onRetry && (
-            <button type="button" onClick={onRetry} className="inline-flex shrink-0 cursor-pointer items-center gap-1 font-semibold underline hover:text-red-900">
+            <button type="button" onClick={onRetry} className="inline-flex shrink-0 cursor-pointer items-center gap-1 rounded font-semibold underline hover:text-red-900 focus-visible:outline-2 focus-visible:outline-mypeken-brand">
               <RotateCcw className="h-3 w-3" aria-hidden="true" />
               Coba Lagi
             </button>
@@ -250,9 +246,11 @@ export function UploadBox({
             )}
             <p className="text-xs font-medium text-neutral-700">{hint}</p>
             <button
+              id={`${id}-btn`}
               type="button"
               onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}
               aria-label={`Pilih foto untuk ${label}`}
+              aria-describedby={activeError ? errId : undefined}
               className={pickBtnCls}
             >
               <CloudUpload className="h-3.5 w-3.5" aria-hidden="true" />
