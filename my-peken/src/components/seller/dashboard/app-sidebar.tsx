@@ -19,9 +19,10 @@ import { GalleryVerticalEndIcon, AudioLinesIcon, TerminalIcon, TerminalSquareIco
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
+    name: "Sakamoto Store",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
+    href: "/Mydashboard",
     saldo: 0,
   },
   teams: [
@@ -61,7 +62,7 @@ const data = {
       items: [
         {
           title: "Chat",
-          url: "#",
+          url: "/Chat",
         },
         {
           title: "Ulasann",
@@ -88,6 +89,23 @@ const data = {
         {
           title: "Daftar Transaksi",
           url: "#",
+        }
+      ],
+    },
+    {
+      title: "Produk",
+      url: "#",
+      icon: (
+        <BookOpenIcon/>
+      ),
+      items: [
+        {
+          title: "Daftar Produk",
+          url: "/DashboardProduk",
+        },
+        {
+          title: "Tambah Produk",
+          url: "/TambahProduct",
         }
       ],
     }
