@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { ItemVariant } from "../ItemVariant";
 import { ProductType, ProductVariant } from "../Product";
 import { StoreMeta } from "@/services/ProductService";
-import { formatRupiah } from "./priceUtils";
+import { formatRupiah } from "../../utils/priceUtils";
 
 interface ProductInfoSectionProps {
     product: ProductType;
@@ -144,7 +144,7 @@ export function ProductInfoSection({
                 )}
             </div>
 
-            {/* 1. DETAIL & DESKRIPSI (DITULIS KE BAWAH TANPA CARD) */}
+            {/* 1. DETAIL & DESKRIPSI */}
             <div className="border-t border-mypeken-light-gray pt-4 space-y-3 text-sm leading-relaxed">
                 <h2 className="text-base font-bold text-mypeken-black">
                     Detail & Deskripsi
@@ -190,7 +190,7 @@ export function ProductInfoSection({
                 )}
             </div>
 
-            {/* 2. DIMENSI & SPESIFIKASI (DITULIS KE BAWAH TANPA CARD) */}
+            {/* 2. DIMENSI & SPESIFIKASI */}
             <div className="border-t border-mypeken-light-gray pt-4 space-y-2.5 text-sm">
                 <h2 className="text-base font-bold text-mypeken-black">
                     Dimensi & Spesifikasi
@@ -229,7 +229,6 @@ export function ProductInfoSection({
                 </dl>
             </div>
 
-            {/* 3. INFO PENTING (DITULIS KE BAWAH TANPA CARD) */}
             <div className="border-t border-mypeken-light-gray pt-4 space-y-3 text-sm">
                 <h2 className="text-base font-bold text-mypeken-black">Info Penting</h2>
                 <div className="flex items-start gap-2.5">
@@ -260,7 +259,6 @@ export function ProductInfoSection({
                 </div>
             </div>
 
-            {/* STORE INFO & SHIPPING ORIGIN (TANPA CARD) */}
             <section
                 aria-label="Informasi Toko dan Pengiriman"
                 className="border-t border-mypeken-light-gray pt-4 space-y-4"

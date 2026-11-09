@@ -4,7 +4,7 @@ import Image from "next/image"
 import { ShoppingCart } from "lucide-react"
 import { ProductType } from "./Product"
 import { usePathname, useRouter } from "next/navigation"
-import { formatRupiah } from "./product-detail/priceUtils"
+import { formatRupiah } from "../utils/priceUtils"
 
 const ProductCard = ({ product }: { product: ProductType }) => {
     const router = useRouter();
