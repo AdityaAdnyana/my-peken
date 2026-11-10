@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { GoogleButton } from "./google-button";
+import { useAuth } from "@/context/auth-context";
 
 export function LoginForm() {
   const router = useRouter();
+  const { markLoggedIn } = useAuth();
   const [identifier, setIdentifier] = useState("");
 
   const isFilled = identifier.trim().length > 0;
@@ -14,6 +16,8 @@ export function LoginForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFilled) return;
+
+    markLoggedIn();
 
     // ke halaman pendaftaran seller KYC
     router.push("/seller/kyc");
@@ -77,7 +81,13 @@ export function LoginForm() {
         <div className="flex-1 h-px bg-mypeken-light-gray" />
       </div>
 
-      <GoogleButton text="Google" onClick={() => router.push("/seller/kyc")} />
+      <GoogleButton
+        text="Google"
+        onClick={() => {
+          markLoggedIn();
+          router.push("/seller/kyc");
+        }}
+      />
     </div>
   );
 }

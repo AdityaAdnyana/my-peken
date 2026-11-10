@@ -59,3 +59,17 @@ export type ProductType = {
 };
 
 export type ProductsType = ProductType[];
+
+/** Satu baris keranjang: produk + varian + jumlah */
+export type CartItemType = {
+    key: string;              // `${productId}-${variantId ?? "default"}`
+    productId: string | number;
+    title: string;
+    thumbnail: string;
+    unitPrice: number;
+    qty: number;
+    variantId?: string;
+    variantName?: string;
+    note?: string;
+    storeName?: string;
+};

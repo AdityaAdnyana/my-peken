@@ -5,10 +5,12 @@ import { ShoppingCart } from "lucide-react"
 import { ProductType } from "./Product"
 import { usePathname, useRouter } from "next/navigation"
 import { formatRupiah } from "../utils/priceUtils"
+import { useAddToCart } from "@/hooks/use-add-to-cart"
 
 const ProductCard = ({ product }: { product: ProductType }) => {
     const router = useRouter();
     const pathname = usePathname();
+    const addToCart = useAddToCart();
 
     const handlePathChange = () => {
         const namaToko = "nama-toko"
@@ -28,7 +30,12 @@ const ProductCard = ({ product }: { product: ProductType }) => {
                 {/* PRICE AND ADD TO CART */}
                 <div className="flex items-center justify-between">
                     <p className="font-medium text-mypeken-brand">{formatRupiah(product.price)}</p>
-                    <button className="flex items-center gap-2 ring-1 ring-mypeken-light-gray shadow-lg rounded-md px-2 py-1 text-sm cursor-pointer hover:text-mypeken-white hover:bg-mypeken-brand transition-all duration-300">
+                    <button
+                        type="button"
+                        onClick={() => addToCart(product)}
+                        aria-label={`Tambah ${product.title} ke keranjang`}
+                        className="flex items-center gap-2 ring-1 ring-mypeken-light-gray shadow-lg rounded-md px-2 py-1 text-sm cursor-pointer hover:text-mypeken-white hover:bg-mypeken-brand transition-all duration-300"
+                    >
                         <ShoppingCart className="w-4 h-4" />
                         Add to Cart
                     </button>
