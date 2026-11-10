@@ -5,7 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import { CartItemCard } from "./CartItemCard";
 import { useCart } from "@/context/cart-context";
 import { useRequireAuth } from "@/hooks/use-require-auth";
-import { formatRupiah } from "./product-detail/priceUtils";
+import { formatRupiah } from "../utils/priceUtils";
 
 export function CartContent() {
   const { ready } = useRequireAuth();

@@ -1,4 +1,5 @@
 import { ChatSideBar } from "@/components/seller/Chat/ChatSideBar"
+import MainChat from "@/components/seller/Chat/MainChat"
 
 const data ={
     user :{
@@ -11,8 +12,9 @@ const data ={
 
 export default function ChatSeller(){
     return(
-        <main>
+        <main className=" flex flex-row">
             <ChatSideBar />
+            <MainChat />
         </main>
     )
 }

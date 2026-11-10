@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import type { CartItemType } from "./Product";
-import { formatRupiah } from "./product-detail/priceUtils";
+import { formatRupiah } from "../utils/priceUtils";
 
 type CartItemCardProps = {
   item: CartItemType;

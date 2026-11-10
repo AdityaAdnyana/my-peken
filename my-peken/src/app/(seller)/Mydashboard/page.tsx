@@ -19,10 +19,10 @@ export default function dashboardSeller() {
                         <p className="font-bold text-2xl">Penting Hari Ini</p>
                         <p className="text-xl"> Aktivitas Hari Ini</p>                       
                         <div className="flex flex-wrap bg-mypeken-white devide-4 ">
-                            <CardSeller title="Pesan Baru" notif="2"/>
+                            <CardSeller title="Pesan Baru" notif="2" cHref="/Chat"/>
                             <CardSeller title="Siap Dikirim" notif="1"/>
                             <CardSeller title="Komplain Pesanan" />
-                            <CardSeller title="Chat Belum Dibaca" notif="1"/>
+                            <CardSeller title="Chat Belum Dibaca" notif="1" cHref="/Chat"/>
                             <CardSeller title="Diskusi Belum Dibaca" notif="0"/>
                             
                                                         

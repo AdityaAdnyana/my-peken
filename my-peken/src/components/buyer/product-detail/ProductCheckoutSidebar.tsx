@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ProductType, ProductVariant } from "../Product";
-import { formatRupiah } from "./priceUtils";
+import { formatRupiah } from "../../utils/priceUtils";
 import { useAddToCart } from "@/hooks/use-add-to-cart";
 
 interface ProductCheckoutSidebarProps {
@@ -45,23 +45,27 @@ export function ProductCheckoutSidebar({
 }: ProductCheckoutSidebarProps) {
     const addToCart = useAddToCart();
 
-    const [quantityInput, setQuantityInput] = useState<string>("");
+    const [quantityInput, setQuantityInput] = useState<string>(String(minOrder));
     const [note, setNote] = useState<string>("");
     const [showNoteInput, setShowNoteInput] = useState<boolean>(false);
     const [orderError, setOrderError] = useState<string | null>(null);
     const [orderSuccess, setOrderSuccess] = useState<string | null>(null);
     const [shareFeedback, setShareFeedback] = useState<string | null>(null);
 
-    const parsedQuantity = quantityInput === "" ? minOrder : parseInt(quantityInput, 10);
-    const safeQuantity = Number.isNaN(parsedQuantity) ? minOrder : parsedQuantity;
+    const parsedQty = parseInt(quantityInput, 10);
+    const safeQuantity = Number.isNaN(parsedQty) ? minOrder : Math.max(1, parsedQty);
 
-    const subtotalPrice = unitPrice * Math.max(1, safeQuantity);
-    const totalSavings = (originalUnitPrice - unitPrice) * Math.max(1, safeQuantity);
+    const subtotalPrice = unitPrice * safeQuantity;
+    const totalSavings = (originalUnitPrice - unitPrice) * safeQuantity;
 
-    const validateOrder = (qty: number, currentNote: string): string | null => {
+    const validateOrder = (rawQty: string, currentNote: string): string | null => {
         if (availableStock <= 0) {
             return "Maaf, stok produk untuk varian ini sedang habis.";
         }
+        if (rawQty.trim() === "") {
+            return "Jumlah pembelian tidak boleh kosong.";
+        }
+        const qty = parseInt(rawQty, 10);
         if (Number.isNaN(qty) || qty < 1) {
             return "Jumlah pembelian harus berupa angka minimal 1.";
         }
@@ -77,43 +81,19 @@ export function ProductCheckoutSidebar({
         return null;
     };
 
-    const handleQuantityStep = (delta: number) => {
+    const updateOrder = (nextQty: string, nextNote: string) => {
         setOrderSuccess(null);
-        const nextQty = safeQuantity + delta;
-        setQuantityInput(String(Math.max(1, nextQty)));
-        setOrderError(validateOrder(nextQty, note));
-    };
-
-    const handleQuantityChange = (value: string) => {
-        setOrderSuccess(null);
-        setQuantityInput(value);
-        const num = parseInt(value, 10);
-        if (value.trim() === "") {
-            setOrderError("Jumlah pembelian tidak boleh kosong.");
-            return;
-        }
-        setOrderError(validateOrder(num, note));
-    };
-
-    const handleNoteChange = (value: string) => {
-        setOrderSuccess(null);
-        setNote(value);
-        if (value.length > 144) {
-            setOrderError("Catatan pembeli maksimal 144 karakter.");
-        } else {
-            setOrderError(validateOrder(safeQuantity, value));
-        }
+        setQuantityInput(nextQty);
+        setNote(nextNote);
+        setOrderError(validateOrder(nextQty, nextNote));
     };
 
     const handleOrderSubmit = (actionType: "cart" | "buy", e?: FormEvent) => {
-        if (e) e.preventDefault();
+        e?.preventDefault();
         setOrderSuccess(null);
-        const errorMsg = validateOrder(safeQuantity, note);
-        if (errorMsg) {
-            setOrderError(errorMsg);
-            return;
-        }
-        setOrderError(null);
+        const errorMsg = validateOrder(quantityInput, note);
+        setOrderError(errorMsg);
+        if (errorMsg) return;
 
         // Belum login → hook simpan pending item & redirect ke /login
         const added = addToCart(product, {
@@ -135,17 +115,18 @@ export function ProductCheckoutSidebar({
     };
 
     const handleShare = async () => {
-        const url = typeof window !== "undefined" ? window.location.href : "";
         try {
-            if (navigator.clipboard && url) {
-                await navigator.clipboard.writeText(url);
+            if (navigator.clipboard && window.location.href) {
+                await navigator.clipboard.writeText(window.location.href);
                 setShareFeedback("Tautan produk disalin!");
-                setTimeout(() => setShareFeedback(null), 2500);
+                return;
             }
         } catch {
-            setShareFeedback("Siap dibagikan");
+            // Fallback jika clipboard gagal
+        } finally {
             setTimeout(() => setShareFeedback(null), 2500);
         }
+        setShareFeedback("Siap dibagikan");
     };
 
     return (
@@ -198,7 +179,7 @@ export function ProductCheckoutSidebar({
                                 type="button"
                                 aria-label="Kurangi jumlah"
                                 disabled={safeQuantity <= minOrder || availableStock <= 0}
-                                onClick={() => handleQuantityStep(-1)}
+                                onClick={() => updateOrder(String(Math.max(1, safeQuantity - 1)), note)}
                                 className="flex h-9 w-9 items-center justify-center text-mypeken-black hover:bg-mypeken-light-gray/40 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer rounded-l-lg"
                             >
                                 <Minus className="h-4 w-4" aria-hidden="true" />
@@ -209,8 +190,8 @@ export function ProductCheckoutSidebar({
                                 inputMode="numeric"
                                 min={minOrder}
                                 max={availableStock}
-                                value={quantityInput === "" ? String(minOrder) : quantityInput}
-                                onChange={(e) => handleQuantityChange(e.target.value)}
+                                value={quantityInput}
+                                onChange={(e) => updateOrder(e.target.value, note)}
                                 aria-invalid={Boolean(orderError)}
                                 aria-describedby={orderError ? "order-error-msg" : undefined}
                                 className="h-9 w-16 border-0 text-center font-semibold text-mypeken-black focus-visible:ring-0"
@@ -219,7 +200,7 @@ export function ProductCheckoutSidebar({
                                 type="button"
                                 aria-label="Tambah jumlah"
                                 disabled={safeQuantity >= availableStock || availableStock <= 0}
-                                onClick={() => handleQuantityStep(1)}
+                                onClick={() => updateOrder(String(safeQuantity + 1), note)}
                                 className="flex h-9 w-9 items-center justify-center text-mypeken-brand hover:bg-mypeken-light-gray/40 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer rounded-r-lg"
                             >
                                 <Plus className="h-4 w-4" aria-hidden="true" />
@@ -249,7 +230,7 @@ export function ProductCheckoutSidebar({
                                 type="text"
                                 placeholder="Contoh: Pilih yang masih segar / bungkus rapat"
                                 value={note}
-                                onChange={(e) => handleNoteChange(e.target.value)}
+                                onChange={(e) => updateOrder(quantityInput, e.target.value)}
                                 aria-invalid={note.length > 144}
                                 className="border-mypeken-light-gray bg-white text-xs"
                             />

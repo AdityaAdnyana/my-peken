@@ -4,7 +4,7 @@ import Image from "next/image"
 import { ShoppingCart } from "lucide-react"
 import { ProductType } from "./Product"
 import { usePathname, useRouter } from "next/navigation"
-import { formatRupiah } from "./product-detail/priceUtils"
+import { formatRupiah } from "../utils/priceUtils"
 import { useAddToCart } from "@/hooks/use-add-to-cart"
 
 const ProductCard = ({ product }: { product: ProductType }) => {

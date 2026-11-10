@@ -55,6 +55,7 @@ export type ProductType = {
     hook?: string;
     sellQuantity?: number;
     variant?: ProductVariant[];
+    isHidden?: boolean;
 };
 
 export type ProductsType = ProductType[];
