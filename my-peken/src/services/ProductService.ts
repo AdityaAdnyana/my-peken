@@ -2,6 +2,7 @@
 
 import useSWR from "swr";
 import { ProductType, ProductVariant } from "@/components/buyer/Product";
+import { fetcher as baseFetcher } from "@/lib/fetcher";
 import rawMetaData from "../../public/mock/product-detail-meta.json";
 
 export interface StoreMeta {
@@ -64,6 +65,7 @@ export function useProductDetail(id?: string | number) {
         id !== undefined && id !== null && String(id).trim() !== ""
             ? String(id).trim()
             : "1";
+            // Revisi buat nanti buat fallback ketika data tidak ada
 
     const {
         data: productData,

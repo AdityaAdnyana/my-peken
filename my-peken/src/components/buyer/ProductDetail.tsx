@@ -34,7 +34,7 @@ const ProductDetail = ({ id, toko, params }: ProductDetailProps) => {
     const searchParams = useSearchParams();
     const routeParams = useParams<{ toko?: string; slug?: string }>();
 
-    const effectiveId = id || searchParams.get("id") || "1";
+    const effectiveId = id || searchParams.get("id") || "1"; //revisi 1 -> -1
     const effectiveToko = toko || routeParams?.toko;
 
     const { product, storeMeta, isLoading, isError, mutate } = useProductDetail(effectiveId);
