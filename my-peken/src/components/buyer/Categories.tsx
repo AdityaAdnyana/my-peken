@@ -13,7 +13,7 @@ const CategoryButtons = () => {
     const router = useRouter();
     const pathname = usePathname();
 
-    const selectedCatagory = searchParams.get("category");
+    const selectedCatagory = searchParams.get("category") || "all";
 
     const handleChange = (value:string | null) =>{
         const params = new URLSearchParams(searchParams);

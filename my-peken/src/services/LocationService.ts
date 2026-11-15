@@ -1,4 +1,4 @@
-import { fetcher } from "./ProductService"
+import { fetcher } from "@/lib/fetcher"
 
 export async function getCurrentAddress(): Promise<string> {
     if (!("geolocation" in navigator)) {
@@ -13,7 +13,8 @@ export async function getCurrentAddress(): Promise<string> {
     const { latitude, longitude } = position.coords
 
     const data = await fetcher(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&accept-language=id`
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}&accept-language=id`,
+        "Detail alamat untuk lokasi ini tidak ditemukan (404)."
     )
 
     const { road, suburb, village, city, town } = data.address || {}

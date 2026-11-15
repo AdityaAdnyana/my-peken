@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AlertCircle, RefreshCw } from "lucide-react";
 import Loading from "@/components/general/Loading";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function ProductDetailSkeleton() {
     return (
@@ -16,25 +17,27 @@ export function ProductDetailSkeleton() {
             <div className="flex items-center justify-center">
                 <Loading message="Memuat data detail produk..." />
             </div>
-            <div className="product-detail-grid animate-pulse">
+            <div className="product-detail-grid">
                 <div className="product-gallery-col space-y-3">
-                    <div className="aspect-square w-full rounded-xl bg-mypeken-light-gray" />
+                    <Skeleton className="aspect-square w-full rounded-xl bg-mypeken-light-gray" />
                     <div className="grid grid-cols-4 gap-2">
-                        <div className="aspect-square rounded-lg bg-mypeken-light-gray" />
-                        <div className="aspect-square rounded-lg bg-mypeken-light-gray" />
-                        <div className="aspect-square rounded-lg bg-mypeken-light-gray" />
-                        <div className="aspect-square rounded-lg bg-mypeken-light-gray" />
+                        {Array.from({ length: 4 }).map((_, i) => (
+                            <Skeleton
+                                key={i}
+                                className="aspect-square rounded-lg bg-mypeken-light-gray"
+                            />
+                        ))}
                     </div>
                 </div>
                 <div className="product-info-col space-y-4 p-2">
-                    <div className="h-4 w-32 rounded bg-mypeken-light-gray" />
-                    <div className="h-7 w-3/4 rounded bg-mypeken-light-gray" />
-                    <div className="h-4 w-1/2 rounded bg-mypeken-light-gray" />
-                    <div className="h-9 w-44 rounded bg-mypeken-light-gray" />
-                    <div className="h-24 w-full rounded bg-mypeken-light-gray" />
-                    <div className="h-32 w-full rounded bg-mypeken-light-gray" />
+                    <Skeleton className="h-4 w-32 bg-mypeken-light-gray" />
+                    <Skeleton className="h-7 w-3/4 bg-mypeken-light-gray" />
+                    <Skeleton className="h-4 w-1/2 bg-mypeken-light-gray" />
+                    <Skeleton className="h-9 w-44 bg-mypeken-light-gray" />
+                    <Skeleton className="h-24 w-full bg-mypeken-light-gray" />
+                    <Skeleton className="h-32 w-full bg-mypeken-light-gray" />
                 </div>
-                <div className="product-checkout-col rounded-xl bg-mypeken-light-gray h-96" />
+                <Skeleton className="product-checkout-col rounded-xl bg-mypeken-light-gray h-96" />
             </div>
         </div>
     );
