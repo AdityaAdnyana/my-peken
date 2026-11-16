@@ -12,12 +12,13 @@ const CategoryButtons = () => {
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
-
+    
     const selectedCatagory = searchParams.get("category") || "all";
 
     const handleChange = (value:string | null) =>{
         const params = new URLSearchParams(searchParams);
         params.set("category", value || "all");
+        params.delete("page");
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
     };
 
