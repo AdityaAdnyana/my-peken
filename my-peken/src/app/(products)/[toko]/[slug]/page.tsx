@@ -4,16 +4,11 @@ import { Suspense } from "react";
 
 export const instant = false
 
-const ProductPage = async ({
-    searchParams,
-}: {
-    searchParams: Promise<{ id: string }>
-}) => {
-    const id = (await searchParams).id;
+const ProductPage = () => {
     return (
         <div className="">
             <Suspense fallback={<Loading message="Memuat halaman..."/>}>
-                <ProductDetail id={id} params={"productpage"} />
+                <ProductDetail params={"productpage"} />
             </Suspense>
         </div>
     )

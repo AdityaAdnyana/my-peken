@@ -3,22 +3,17 @@
 import { useState, type KeyboardEvent } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useProductDetailContext } from "@/context/product-detail-context";
 
-interface ProductImageGalleryProps {
-    title: string;
-    images: string[];
-    selectedImageIdx: number;
-    onSelectImage: (idx: number) => void;
-}
-
-export function ProductImageGallery({
-    title,
-    images,
-    selectedImageIdx,
-    onSelectImage,
-}: ProductImageGalleryProps) {
+export function ProductImageGallery() {
+    const {
+        title,
+        images,
+        currentImage,
+        selectedImageIdx,
+        onSelectImage,
+    } = useProductDetailContext();
     const [isImageZoomed, setIsImageZoomed] = useState<boolean>(false);
-    const currentImage = images[selectedImageIdx] || images[0];
 
     const handleGalleryKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
         if (images.length <= 1) return;

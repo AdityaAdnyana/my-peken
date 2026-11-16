@@ -15,38 +15,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { ItemVariant } from "../ItemVariant";
 import { ProductType, ProductVariant } from "../Product";
-import { StoreMeta } from "@/services/ProductService";
 import { formatRupiah } from "../../utils/priceUtils";
+import { useProductDetailContext } from "@/context/product-detail-context";
 
-interface ProductInfoSectionProps {
-    product: ProductType;
-    storeName: string;
-    storeMeta?: StoreMeta;
-    activeVariant?: ProductVariant;
-    availableStock: number;
-    minOrder: number;
-    unitPrice: number;
-    originalUnitPrice: number;
-    discountPct: number;
-    averageRating: number;
-    totalReviews: number;
-    onSelectVariant: (variant: ProductVariant) => void;
-}
-
-export function ProductInfoSection({
-    product,
-    storeName,
-    storeMeta,
-    activeVariant,
-    availableStock,
-    minOrder,
-    unitPrice,
-    originalUnitPrice,
-    discountPct,
-    averageRating,
-    totalReviews,
-    onSelectVariant,
-}: ProductInfoSectionProps) {
+export function ProductInfoSection() {
+    const {
+        product,
+        storeName,
+        storeMeta,
+        activeVariant,
+        availableStock,
+        minOrder,
+        unitPrice,
+        originalUnitPrice,
+        discountPct,
+        averageRating,
+        totalReviews,
+        onSelectVariant,
+    } = useProductDetailContext();
     const [isFollowingStore, setIsFollowingStore] = useState<boolean>(false);
 
     return (
@@ -144,7 +130,7 @@ export function ProductInfoSection({
                 )}
             </div>
 
-            {/* 1. DETAIL & DESKRIPSI */}
+            {/* DETAIL & DESKRIPSI */}
             <div className="border-t border-mypeken-light-gray pt-4 space-y-3 text-sm leading-relaxed">
                 <h2 className="text-base font-bold text-mypeken-black">
                     Detail & Deskripsi
@@ -190,7 +176,7 @@ export function ProductInfoSection({
                 )}
             </div>
 
-            {/* 2. DIMENSI & SPESIFIKASI */}
+            {/* DIMENSI & SPESIFIKASI */}
             <div className="border-t border-mypeken-light-gray pt-4 space-y-2.5 text-sm">
                 <h2 className="text-base font-bold text-mypeken-black">
                     Dimensi & Spesifikasi
