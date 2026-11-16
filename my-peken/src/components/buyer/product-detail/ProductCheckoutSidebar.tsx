@@ -16,33 +16,22 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ProductType, ProductVariant } from "../Product";
 import { formatRupiah } from "../../utils/priceUtils";
 import { useAddToCart } from "@/hooks/use-add-to-cart";
+import { useProductDetailContext } from "@/context/product-detail-context";
 
-interface ProductCheckoutSidebarProps {
-    product: ProductType;
-    currentImage: string;
-    activeVariant?: ProductVariant;
-    availableStock: number;
-    minOrder: number;
-    unitPrice: number;
-    originalUnitPrice: number;
-    discountPct: number;
-    storeName: string;
-}
-
-export function ProductCheckoutSidebar({
-    product,
-    currentImage,
-    activeVariant,
-    availableStock,
-    minOrder,
-    unitPrice,
-    originalUnitPrice,
-    discountPct,
-    storeName,
-}: ProductCheckoutSidebarProps) {
+export function ProductCheckoutSidebar() {
+    const {
+        product,
+        currentImage,
+        activeVariant,
+        availableStock,
+        minOrder,
+        unitPrice,
+        originalUnitPrice,
+        discountPct,
+        storeName,
+    } = useProductDetailContext();
     const addToCart = useAddToCart();
 
     const [quantityInput, setQuantityInput] = useState<string>(String(minOrder));
