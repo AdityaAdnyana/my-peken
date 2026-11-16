@@ -2,8 +2,9 @@
 
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
-import { BadgeCheck, Info } from "lucide-react";
+import { BadgeCheck, Info, RotateCcw } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useFetchOptions, type SelectOption } from "./kyc/use-fetch-options";
 
 const STORAGE_KEY = "mypeken_kyc_submission";
 
@@ -18,7 +19,15 @@ const getServerSnapshot = () => "";
 interface KycSubmissionState {
   submitted?: boolean;
   namaToko?: string;
+  nomorTelepon?: string;
+  deskripsiToko?: string;
+  nik?: string;
+  bank?: string;
+  nomorRekening?: string;
   namaPemilik?: string;
+  provinsi?: string;
+  kabupaten?: string;
+  alamatLengkap?: string;
 }
 
 const STEPS = [
@@ -43,11 +52,20 @@ function parseSubmission(raw: string): KycSubmissionState {
   }
 }
 
+function getLabel(options: SelectOption[], value?: string): string {
+  if (!value) return "-";
+  return options.find((opt) => opt.value === value)?.label ?? value;
+}
+
 export function KycVerificationStatus() {
   const rawSubmission = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
-  const { submitted = false, namaToko, namaPemilik } = parseSubmission(rawSubmission);
+  const submission = parseSubmission(rawSubmission);
+  const { submitted = false, namaToko, namaPemilik, bank, kabupaten, provinsi } = submission;
   const greetingName = namaPemilik || "Aditya";
   const activeStep = submitted ? 3 : 1;
+
+  const bankOpts = useFetchOptions("/data/banks.json", "bank");
+  const kabupatenOpts = useFetchOptions("/data/kabupaten.json", "kabupaten");
 
   return (
     <section aria-labelledby="kyc-status-heading" className="flex flex-col gap-5">
@@ -162,20 +180,96 @@ export function KycVerificationStatus() {
             </ol>
           </div>
 
-          <div className="mt-8 flex w-full max-w-[430px] items-start gap-2.5 rounded-xl bg-[#E8F1FD] px-4 py-4 text-left sm:px-5">
+          {submitted && (
+            <div className="mt-7 w-full max-w-[430px] rounded-xl border border-mypeken-light-gray bg-neutral-50/70 px-4 py-3.5 text-left sm:px-5">
+              <h3 className="text-xs font-semibold text-neutral-900">Ringkasan Pengajuan Toko</h3>
+              <dl className="mt-2.5 grid grid-cols-1 gap-2 text-xs sm:grid-cols-2">
+                <div>
+                  <dt className="text-neutral-500">Nama Toko</dt>
+                  <dd className="font-medium text-neutral-900">{namaToko || "-"}</dd>
+                </div>
+                <div>
+                  <dt className="text-neutral-500">Pemilik Rekening</dt>
+                  <dd className="font-medium text-neutral-900">{namaPemilik || "-"}</dd>
+                </div>
+                <div>
+                  <dt className="text-neutral-500">Bank Pencairan</dt>
+                  <dd className="mt-0.5 font-medium text-neutral-900">
+                    {bankOpts.isLoading ? (
+                      <span
+                        role="status"
+                        aria-label="Memuat data bank"
+                        className="inline-block h-3.5 w-28 animate-pulse rounded bg-neutral-200 motion-reduce:animate-none"
+                      />
+                    ) : bankOpts.error ? (
+                      <span role="alert" className="inline-flex items-center gap-1.5 text-red-600">
+                        <span>Gagal memuat</span>
+                        <button
+                          type="button"
+                          onClick={bankOpts.retry}
+                          className="inline-flex cursor-pointer items-center gap-0.5 font-semibold underline hover:text-red-800 focus-visible:outline-2 focus-visible:outline-mypeken-brand"
+                        >
+                          <RotateCcw className="h-3 w-3" aria-hidden="true" />
+                          Coba Lagi
+                        </button>
+                      </span>
+                    ) : (
+                      getLabel(bankOpts.data, bank)
+                    )}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-neutral-500">Lokasi Toko</dt>
+                  <dd className="mt-0.5 font-medium text-neutral-900">
+                    {kabupatenOpts.isLoading ? (
+                      <span
+                        role="status"
+                        aria-label="Memuat data kabupaten"
+                        className="inline-block h-3.5 w-24 animate-pulse rounded bg-neutral-200 motion-reduce:animate-none"
+                      />
+                    ) : kabupatenOpts.error ? (
+                      <span role="alert" className="inline-flex items-center gap-1.5 text-red-600">
+                        <span>Gagal memuat</span>
+                        <button
+                          type="button"
+                          onClick={kabupatenOpts.retry}
+                          className="inline-flex cursor-pointer items-center gap-0.5 font-semibold underline hover:text-red-800 focus-visible:outline-2 focus-visible:outline-mypeken-brand"
+                        >
+                          <RotateCcw className="h-3 w-3" aria-hidden="true" />
+                          Coba Lagi
+                        </button>
+                      </span>
+                    ) : kabupaten ? (
+                      `${getLabel(kabupatenOpts.data, kabupaten)}${provinsi ? `, ${provinsi}` : ""}`
+                    ) : (
+                      provinsi || "-"
+                    )}
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          )}
+
+          <aside
+            aria-label="Informasi status verifikasi"
+            className="mt-8 flex w-full max-w-[430px] items-start gap-2.5 rounded-xl bg-[#E8F1FD] px-4 py-4 text-left sm:px-5"
+          >
             <Info className="mt-0.5 h-4 w-4 shrink-0 text-[#1E60D5]" aria-hidden="true" />
             <p className="text-xs leading-relaxed text-[#1B4FB0]">
               {submitted
                 ? "Selamat! Pengajuan toko Anda telah disetujui Admin dan Toko sudah Aktif. Anda dapat langsung menuju Dashboard Seller atau lanjut berbelanja di MyPeken."
                 : "Sambil menunggu persetujuan toko, Anda dapat menggunakan akun ini untuk berbelanja produk UMKM lainnya di MyPeken."}
             </p>
-          </div>
+          </aside>
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3 max-[479px]:w-full max-[479px]:flex-col">
             <Link
               href="/seller/kyc"
               onClick={() => {
-                window.sessionStorage.removeItem(STORAGE_KEY);
+                window.sessionStorage.setItem(
+                  STORAGE_KEY,
+                  JSON.stringify({ ...submission, submitted: false })
+                );
                 window.dispatchEvent(new Event("storage"));
               }}
               className={`${actionBtnBaseCls} border border-neutral-300 px-5 text-neutral-800 hover:bg-neutral-100`}

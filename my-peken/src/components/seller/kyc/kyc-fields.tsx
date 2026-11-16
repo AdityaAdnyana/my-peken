@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { ChevronDown, CloudUpload, ImageIcon, Loader2, RotateCcw, Trash2 } from "lucide-react";
 import type { SelectOption } from "./use-fetch-options";
 
@@ -98,6 +99,7 @@ export interface SelectFieldProps {
   value: string;
   options: SelectOption[];
   onChange: (value: string) => void;
+  onBlur?: () => void;
   loading?: boolean;
   fetchError?: string | null;
   onRetry?: () => void;
@@ -107,7 +109,7 @@ export interface SelectFieldProps {
 }
 
 export function SelectField({
-  id, name, label, placeholder, value, options, onChange,
+  id, name, label, placeholder, value, options, onChange, onBlur,
   loading = false, fetchError = null, onRetry, error,
   required = false, hideLabel = false,
 }: SelectFieldProps) {
@@ -125,14 +127,15 @@ export function SelectField({
         <select
           id={id}
           name={name}
-          value={value}
+          value={loading ? "" : value}
           disabled={loading || Boolean(fetchError)}
           onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
           aria-busy={loading}
           aria-required={required}
           aria-invalid={Boolean(activeError)}
           aria-describedby={activeError ? errId : undefined}
-          className={`${fieldCls} appearance-none pr-9 disabled:bg-neutral-50 disabled:text-neutral-500`}
+          className={`${fieldCls} appearance-none pr-9 disabled:bg-neutral-50 disabled:text-neutral-500 ${loading ? "text-transparent" : ""}`}
         >
           <option value="">{loading ? `Memuat ${label.toLowerCase()}...` : placeholder}</option>
           {options.map((opt) => (
@@ -140,7 +143,21 @@ export function SelectField({
           ))}
         </select>
         {loading ? (
-          <Loader2 className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 animate-spin text-neutral-500 motion-reduce:animate-none" aria-hidden="true" />
+          <div
+            role="status"
+            aria-live="polite"
+            className="pointer-events-none absolute inset-0 flex items-center justify-between rounded-lg bg-neutral-50 px-3"
+          >
+            <span
+              className="h-3.5 w-2/3 animate-pulse rounded bg-neutral-200 motion-reduce:animate-none"
+              aria-hidden="true"
+            />
+            <Loader2
+              className="h-4 w-4 shrink-0 animate-spin text-neutral-500 motion-reduce:animate-none"
+              aria-hidden="true"
+            />
+            <span className="sr-only">Memuat {label.toLowerCase()}...</span>
+          </div>
         ) : (
           <ChevronDown className="pointer-events-none absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-neutral-500" aria-hidden="true" />
         )}
@@ -221,6 +238,7 @@ export function UploadBox({
         tabIndex={-1}
         accept=".jpg,.jpeg,.png,image/jpeg,image/png"
         onChange={(e) => processFile(e.target.files?.[0])}
+        aria-required={required}
         aria-invalid={Boolean(activeError)}
         aria-describedby={activeError ? errId : undefined}
         className="sr-only"
@@ -260,13 +278,21 @@ export function UploadBox({
         ) : (
           <div className="flex w-full flex-col items-center gap-2">
             {previewUrl && (
-              <img src={previewUrl} alt={`Pratinjau ${label}`} className="h-14 w-20 rounded border border-neutral-200 object-cover" />
+              <Image
+                src={previewUrl}
+                alt={`Pratinjau ${label}`}
+                width={80}
+                height={56}
+                unoptimized
+                className="h-14 w-20 rounded border border-neutral-200 object-cover"
+              />
             )}
             <p className="max-w-full truncate text-xs font-medium text-neutral-800" title={file.name}>
               {file.name} ({(file.size / 1048576).toFixed(2)} MB)
             </p>
             <div className="flex items-center gap-2">
               <button
+                id={`${id}-btn`}
                 type="button"
                 onClick={() => inputRef.current?.click()}
                 aria-label={`Ganti foto untuk ${label}`}

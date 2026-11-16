@@ -1,10 +1,29 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { AlertCircle, BadgeCheck, Loader2, MapPin, Store, Wallet } from "lucide-react";
 import { InputField, SelectField, UploadBox } from "./kyc/kyc-fields";
 import { useFetchOptions } from "./kyc/use-fetch-options";
+
+const STORAGE_KEY = "mypeken_kyc_submission";
+
+const subscribeStorage = (cb: () => void) => {
+  window.addEventListener("storage", cb);
+  return () => window.removeEventListener("storage", cb);
+};
+
+const getStorageSnapshot = () => window.sessionStorage.getItem(STORAGE_KEY) ?? "";
+const getServerSnapshot = () => "";
+
+function parseDraft(raw: string): Partial<KycFormData> {
+  if (!raw) return {};
+  try {
+    return JSON.parse(raw) as Partial<KycFormData>;
+  } catch {
+    return {};
+  }
+}
 
 interface KycFormData {
   namaToko: string;
@@ -74,7 +93,23 @@ function validateKyc(data: KycFormData, files: Record<UploadKey, FileEntry>) {
 
 export function KycRegistrationForm() {
   const router = useRouter();
-  const [form, setForm] = useState<KycFormData>(INITIAL_FORM);
+  const rawSaved = useSyncExternalStore(subscribeStorage, getStorageSnapshot, getServerSnapshot);
+  const savedDraft = parseDraft(rawSaved);
+  const [draftEdits, setDraftEdits] = useState<Partial<KycFormData>>({});
+
+  const form: KycFormData = {
+    namaToko: draftEdits.namaToko ?? savedDraft.namaToko ?? INITIAL_FORM.namaToko,
+    nomorTelepon: draftEdits.nomorTelepon ?? savedDraft.nomorTelepon ?? INITIAL_FORM.nomorTelepon,
+    deskripsiToko: draftEdits.deskripsiToko ?? savedDraft.deskripsiToko ?? INITIAL_FORM.deskripsiToko,
+    nik: draftEdits.nik ?? savedDraft.nik ?? INITIAL_FORM.nik,
+    bank: draftEdits.bank ?? savedDraft.bank ?? INITIAL_FORM.bank,
+    nomorRekening: draftEdits.nomorRekening ?? savedDraft.nomorRekening ?? INITIAL_FORM.nomorRekening,
+    namaPemilik: draftEdits.namaPemilik ?? savedDraft.namaPemilik ?? INITIAL_FORM.namaPemilik,
+    provinsi: INITIAL_FORM.provinsi,
+    kabupaten: draftEdits.kabupaten ?? savedDraft.kabupaten ?? INITIAL_FORM.kabupaten,
+    alamatLengkap: draftEdits.alamatLengkap ?? savedDraft.alamatLengkap ?? INITIAL_FORM.alamatLengkap,
+  };
+
   const [files, setFiles] = useState<Record<UploadKey, FileEntry>>(EMPTY_FILES);
   const [errors, setErrors] = useState<Partial<Record<FieldKey, string>>>({});
   const [formAlert, setFormAlert] = useState<string | null>(null);
@@ -88,20 +123,31 @@ export function KycRegistrationForm() {
   const kabupatenOpts = useFetchOptions("/data/kabupaten.json", "kabupaten");
 
   useEffect(() => {
-    sessionStorage.removeItem("mypeken_kyc_submission");
-    window.dispatchEvent(new Event("storage"));
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw) as Record<string, unknown>;
+        if (parsed.submitted) {
+          sessionStorage.setItem(STORAGE_KEY, JSON.stringify({ ...parsed, submitted: false }));
+          window.dispatchEvent(new Event("storage"));
+        }
+      }
+    } catch {
+      sessionStorage.removeItem(STORAGE_KEY);
+    }
     const active = previewsRef.current;
     return () => Object.values(active).forEach((url) => url && URL.revokeObjectURL(url));
   }, []);
 
   function updateField<K extends keyof KycFormData>(key: K, value: string) {
-    setForm((prev) => ({ ...prev, [key]: value }));
+    setDraftEdits((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => (prev[key] ? { ...prev, [key]: undefined } : prev));
     if (formAlert) setFormAlert(null);
   }
 
   function handleBlur<K extends keyof KycFormData>(key: K) {
-    if (!form[key].trim()) return;
+    const isSelect = key === "bank" || key === "kabupaten";
+    if (!isSelect && !form[key].trim()) return;
     const fieldErr = validateKyc(form, files)[key];
     setErrors((prev) => ({ ...prev, [key]: fieldErr }));
   }
@@ -126,11 +172,11 @@ export function KycRegistrationForm() {
   function handleReset() {
     Object.values(previewsRef.current).forEach((url) => url && URL.revokeObjectURL(url));
     previewsRef.current = { logoToko: null, fotoKtp: null, selfieKtp: null };
-    setForm(INITIAL_FORM);
+    setDraftEdits({});
     setFiles(EMPTY_FILES);
     setErrors({});
     setFormAlert(null);
-    sessionStorage.removeItem("mypeken_kyc_submission");
+    sessionStorage.removeItem(STORAGE_KEY);
     window.dispatchEvent(new Event("storage"));
   }
 
@@ -150,12 +196,17 @@ export function KycRegistrationForm() {
     setIsSubmitting(true);
     setFormAlert(null);
     try {
+      await new Promise((resolve) => setTimeout(resolve, 600));
       sessionStorage.setItem(
-        "mypeken_kyc_submission",
+        STORAGE_KEY,
         JSON.stringify({
+          ...form,
           submitted: true,
           namaToko: form.namaToko.trim(),
+          nomorTelepon: form.nomorTelepon.trim(),
+          deskripsiToko: form.deskripsiToko.trim(),
           namaPemilik: form.namaPemilik.trim(),
+          alamatLengkap: form.alamatLengkap.trim(),
         })
       );
       window.dispatchEvent(new Event("storage"));
@@ -256,7 +307,7 @@ export function KycRegistrationForm() {
               <div className={subcardCls}>
                 <SelectField id="pilih-bank" name="bank" label="Bank Pencairan" placeholder="Pilih Bank" required hideLabel
                   value={form.bank} options={bankOpts.data} loading={bankOpts.isLoading} fetchError={bankOpts.error}
-                  onRetry={bankOpts.retry} onChange={(v) => updateField("bank", v)} error={errors.bank} />
+                  onRetry={bankOpts.retry} onChange={(v) => updateField("bank", v)} onBlur={() => handleBlur("bank")} error={errors.bank} />
                 <InputField id="nomor-rekening" name="nomorRekening" label="Nomor Rekening" required hideLabel
                   inputMode="numeric" maxLength={20} counter={`${form.nomorRekening.length}/20 digit (min. 8)`}
                   counterValid={/^\d{8,20}$/.test(form.nomorRekening)} placeholder="Nomor Rekening"
@@ -280,7 +331,7 @@ export function KycRegistrationForm() {
                 <SelectField id="kabupaten" name="kabupaten" label="Kabupaten" placeholder="Kabupaten" required hideLabel
                   value={form.kabupaten} options={kabupatenOpts.data} loading={kabupatenOpts.isLoading}
                   fetchError={kabupatenOpts.error} onRetry={kabupatenOpts.retry}
-                  onChange={(v) => updateField("kabupaten", v)} error={errors.kabupaten} />
+                  onChange={(v) => updateField("kabupaten", v)} onBlur={() => handleBlur("kabupaten")} error={errors.kabupaten} />
                 <InputField id="alamat-toko" name="alamatLengkap" label="Alamat Lengkap Toko" required hideLabel multiline rows={3}
                   maxLength={250} counter={`${form.alamatLengkap.length}/250 karakter`}
                   counterValid={form.alamatLengkap.trim().length >= 10}
