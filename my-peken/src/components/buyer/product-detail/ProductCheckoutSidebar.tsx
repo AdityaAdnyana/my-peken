@@ -16,32 +16,24 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ProductType, ProductVariant } from "../Product";
 import { formatRupiah } from "../../utils/priceUtils";
+import { useAddToCart } from "@/hooks/use-add-to-cart";
+import { useProductDetailContext } from "@/context/product-detail-context";
 
-interface ProductCheckoutSidebarProps {
-    product: ProductType;
-    currentImage: string;
-    activeVariant?: ProductVariant;
-    availableStock: number;
-    minOrder: number;
-    unitPrice: number;
-    originalUnitPrice: number;
-    discountPct: number;
-    storeName: string;
-}
+export function ProductCheckoutSidebar() {
+    const {
+        product,
+        currentImage,
+        activeVariant,
+        availableStock,
+        minOrder,
+        unitPrice,
+        originalUnitPrice,
+        discountPct,
+        storeName,
+    } = useProductDetailContext();
+    const addToCart = useAddToCart();
 
-export function ProductCheckoutSidebar({
-    product,
-    currentImage,
-    activeVariant,
-    availableStock,
-    minOrder,
-    unitPrice,
-    originalUnitPrice,
-    discountPct,
-    storeName,
-}: ProductCheckoutSidebarProps) {
     const [quantityInput, setQuantityInput] = useState<string>(String(minOrder));
     const [note, setNote] = useState<string>("");
     const [showNoteInput, setShowNoteInput] = useState<boolean>(false);
@@ -88,16 +80,26 @@ export function ProductCheckoutSidebar({
     const handleOrderSubmit = (actionType: "cart" | "buy", e?: FormEvent) => {
         e?.preventDefault();
         setOrderSuccess(null);
-
         const errorMsg = validateOrder(quantityInput, note);
         setOrderError(errorMsg);
         if (errorMsg) return;
+
+        // Belum login → hook simpan pending item & redirect ke /login
+        const added = addToCart(product, {
+            qty: safeQuantity,
+            unitPrice,
+            variant: activeVariant,
+            note,
+            storeName,
+            buyNow: actionType === "buy",
+        });
+        if (!added) return;
 
         const variantLabel = activeVariant ? ` (${activeVariant.name})` : "";
         setOrderSuccess(
             actionType === "cart"
                 ? `Berhasil menambahkan ${safeQuantity}x "${product.title}"${variantLabel} ke keranjang!`
-                : `Pesanan ${safeQuantity}x "${product.title}"${variantLabel} siap diproses ke pembayaran.`
+                : `Mengarahkan ${safeQuantity}x "${product.title}"${variantLabel} ke halaman checkout...`
         );
     };
 

@@ -4,6 +4,8 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/context/auth-context";
+import { CartProvider } from "@/context/cart-context";
 
 const montserratHeading = Montserrat({ subsets: ["latin"], variable: "--font-heading" });
 
@@ -45,15 +47,19 @@ export default function RootLayout({
           alt="Dekorasi Latar Belakang MyPeken"
           className="fixed inset-0 w-full h-full object-cover -z-10 opacity-25"
         />
-        <div>
-          <Navbar />
-          <main className="bg-mypeken-white mx-auto flex flex-1 flex-col gap-x-6 p-4 sm:px-6 sm:max-w-xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
-            {children}
-            <div className="w-full">
-              <Footer />
+        <AuthProvider>
+          <CartProvider>
+            <div>
+              <Navbar />
+              <main className="bg-mypeken-white mx-auto flex flex-1 flex-col gap-x-6 p-4 sm:px-6 sm:max-w-xl md:max-w-3xl lg:max-w-5xl xl:max-w-6xl">
+                {children}
+                <div className="w-full">
+                  <Footer />
+                </div>
+              </main>
             </div>
-          </main>
-        </div>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

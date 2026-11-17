@@ -13,6 +13,7 @@ const FilterContent = () => {
     const handleFilter = (value: string) => {
         const params = new URLSearchParams(searchParams);
         params.set("sort", value);
+        params.delete("page");
         router.push(`${pathname}?${params.toString()}`, { scroll: false });
     };
 

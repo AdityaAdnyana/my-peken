@@ -5,21 +5,15 @@ import { CheckCircle2, PencilLine, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ProductReview } from "../Product";
+import { useProductDetailContext } from "@/context/product-detail-context";
 
-interface ProductReviewsSectionProps {
-    allReviews: ProductReview[];
-    averageRating: number;
-    activeVariantName?: string;
-    onAddReview: (review: ProductReview) => void;
-}
-
-export function ProductReviewsSection({
-    allReviews,
-    averageRating,
-    activeVariantName,
-    onAddReview,
-}: ProductReviewsSectionProps) {
+export function ProductReviewsSection() {
+    const {
+        allReviews,
+        averageRating,
+        activeVariantName,
+        onAddReview,
+    } = useProductDetailContext();
     const [starFilter, setStarFilter] = useState<number | "all">("all");
     const [reviewSort, setReviewSort] = useState<"newest" | "highest" | "lowest">("newest");
     const [showReviewForm, setShowReviewForm] = useState<boolean>(false);
